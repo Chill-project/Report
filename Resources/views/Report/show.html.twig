@@ -1,0 +1,52 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Report</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Userr</th>
+                <td>{{ entity.userr }}</td>
+            </tr>
+            <tr>
+                <th>Person</th>
+                <td>{{ entity.person }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ entity.date|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Scope</th>
+                <td>{{ entity.scope }}</td>
+            </tr>
+            <tr>
+                <th>Cfdata</th>
+                <td>{{ entity.cFData }}</td>
+            </tr>
+            <tr>
+                <th>Cfgroup</th>
+                <td>{{ entity.cFGroup }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('report') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('report_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
