@@ -19,7 +19,7 @@ Chill\ReportBundle\Entity\Report:
         user:
             targetEntity: Chill\MainBundle\Entity\User
         person:
-            targetEntity: Chill\MainBundle\Entity\Person
+            targetEntity: Chill\PersonBundle\Entity\Person
         cFGroup:
             targetEntity: Chill\CustomFieldsBundle\Entity\CustomFieldsGroup
     lifecycleCallbacks: {  }
