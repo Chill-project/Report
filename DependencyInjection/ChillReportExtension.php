@@ -37,9 +37,13 @@ class ChillReportExtension extends Extension implements PrependExtensionInterfac
             throw new MissingBundleException('ChillCustomFieldsBundle');
         }
 
-        $customizables_entities['customizables_entities'][] =  array('class' => 'Chill\ReportBundle\Entity\Report', 'name' => 'ReportName');
-
-        $container->prependExtensionConfig('chill_custom_fields', $customizables_entities);
+        $container->prependExtensionConfig('chill_custom_fields',
+            array('customizables_entities' => 
+                array(
+                    array('class' => 'Chill\ReportBundle\Entity\Report', 'name' => 'ReportEntity')
+                )
+            )
+        );
     }
 
     public function prepend(ContainerBuilder $container)
