@@ -1,30 +1,30 @@
 report:
     path:     /
-    defaults: { _controller: "ChillReportBundle:report:index" }
+    defaults: { _controller: "ChillReportBundle:Report:index" }
 
 report_show:
     path:     /{id}/show
-    defaults: { _controller: "ChillReportBundle:report:show" }
+    defaults: { _controller: "ChillReportBundle:Report:show" }
 
 report_new:
     path:     /new
-    defaults: { _controller: "ChillReportBundle:report:new" }
+    defaults: { _controller: "ChillReportBundle:Report:new" }
 
 report_create:
     path:     /create
-    defaults: { _controller: "ChillReportBundle:report:create" }
+    defaults: { _controller: "ChillReportBundle:Report:create" }
     requirements: { _method: post }
 
 report_edit:
     path:     /{id}/edit
-    defaults: { _controller: "ChillReportBundle:report:edit" }
+    defaults: { _controller: "ChillReportBundle:Report:edit" }
 
 report_update:
     path:     /{id}/update
-    defaults: { _controller: "ChillReportBundle:report:update" }
+    defaults: { _controller: "ChillReportBundle:Report:update" }
     requirements: { _method: post|put }
 
 report_delete:
     path:     /{id}/delete
-    defaults: { _controller: "ChillReportBundle:report:delete" }
+    defaults: { _controller: "ChillReportBundle:Report:delete" }
     requirements: { _method: post|delete }
