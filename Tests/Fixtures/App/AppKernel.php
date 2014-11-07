@@ -11,6 +11,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Chill\ReportBundle\ChillReportBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
+            new Chill\CustomFieldsBundle\ChillCustomFieldsBundle(),
+            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle()
         );   
     }
 

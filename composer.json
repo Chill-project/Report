@@ -25,6 +25,10 @@
         "doctrine/dbal": "2.5.*@dev",
         "doctrine/orm": "2.5.*@dev",
         "doctrine/common": "2.4.*@dev",
-        "doctrine/doctrine-bundle": "~1.2@dev"
+        "doctrine/doctrine-bundle": "~1.2@dev",
+        "chill-project/main": "dev-master",
+        "chill-project/custom-fields": "dev-master"
+    },
+    "require-dev": {
     }
 }

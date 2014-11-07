@@ -1,4 +1,6 @@
-# config/config.yml
+imports:
+    - { resource: parameters.yml }
+
 framework:
     secret:          Not very secret
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -10,3 +12,16 @@ framework:
     profiler:        { only_exceptions: false }
     templating: #required for assetic. Remove if not needed
         engines: ['twig']
+
+doctrine:
+    dbal:
+        driver:   pdo_pgsql
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_mapping: true
