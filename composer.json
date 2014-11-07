@@ -5,6 +5,9 @@
     "keywords" : ["chill", "social work"],
     "license": "AGPL-3.0",
     "homepage" : "https://github.com/Chill-project/Report",
+    "autoload": {
+        "psr-4": { "Chill\\ReportBundle\\": "" }
+    },
     "authors" : [
         {
             "name": "Champs-Libres",
@@ -23,10 +26,5 @@
         "doctrine/orm": "2.5.*@dev",
         "doctrine/common": "2.4.*@dev",
         "doctrine/doctrine-bundle": "~1.2@dev"
-    },
-    "require-dev": {
-        "symfony/dom-crawler": "2.5",
-        "doctrine/doctrine-fixtures-bundle": "~2.2",
-        "symfony/security": "~2.5"
     }
 }
