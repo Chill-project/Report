@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+use Chill\CustomFieldsBundle\Form\DataTransformer\CustomFieldsGroupToIdTransformer;
+
 class ReportType extends AbstractType
 {
     /**
@@ -14,13 +16,19 @@ class ReportType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $entityManager = $options['em'];
+        $transformer = new CustomFieldsGroupToIdTransformer($entityManager);
+
         $builder
             ->add('user')
             ->add('person')
             ->add('date')
             ->add('scope')
             ->add('cFData')
-            ->add('cFGroup')
+            ->add(
+                $builder->create('cFGroup', 'text')
+                ->addModelTransformer($transformer)
+            )
         ;
     }
     
@@ -31,6 +39,14 @@ class ReportType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Chill\ReportBundle\Entity\Report'
+        ));
+
+        $resolver->setRequired(array(
+            'em',
+        ));
+
+        $resolver->setAllowedTypes(array(
+            'em' => 'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 

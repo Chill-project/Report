@@ -30,8 +30,8 @@ class ReportController extends Controller
 
         $cFGroupsChoice = array();
 
-        foreach ($cFGroups as $g) {
-            $cFGroupsChoice[$g->getId()] = $g->getName($request->getLocale());
+        foreach ($cFGroups as $cFGroup) {
+            $cFGroupsChoice[$cFGroup->getId()] = $cFGroup->getName($request->getLocale());
         }
 
         $form = $this->get('form.factory')
@@ -40,7 +40,7 @@ class ReportController extends Controller
                 'action' => $this->generateUrl('report_new'),
                 'csrf_protection' => false
             ))
-            ->add('type', 'choice', array(
+            ->add('cFGroup', 'choice', array(
                 'choices' => $cFGroupsChoice
             ))
             ->getForm();
@@ -57,7 +57,20 @@ class ReportController extends Controller
      */
     public function createAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new Report();
+
+        $cFGroupId = $request->query->get('cFGroup',null);
+        echo $cFGroupId;
+        die();
+
+        if($cFGroupId) {
+            $entity.setCFGroup(
+                $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cFGroupID)
+            );
+        }
+
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -87,6 +100,7 @@ class ReportController extends Controller
         $form = $this->createForm(new ReportType(), $entity, array(
             'action' => $this->generateUrl('report_create'),
             'method' => 'POST',
+            'em' => $this->getDoctrine()->getManager(),
         ));
 
         $form->add('submit', 'submit', array('label' => 'Create'));
@@ -98,10 +112,21 @@ class ReportController extends Controller
      * Displays a form to create a new Report entity.
      *
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new Report();
-        $form   = $this->createCreateForm($entity);
+
+        $cFGroupId = $request->query->get('cFGroup');
+
+        if($cFGroupId) {
+            $entity->setCFGroup(
+                $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cFGroupId)
+            );
+        }
+
+        $form = $this->createCreateForm($entity);
 
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
             'entity' => $entity,
@@ -167,6 +192,7 @@ class ReportController extends Controller
         $form = $this->createForm(new ReportType(), $entity, array(
             'action' => $this->generateUrl('report_update', array('id' => $entity->getId())),
             'method' => 'PUT',
+            'em' => $this->getDoctrine()->getManager(),
         ));
 
         $form->add('submit', 'submit', array('label' => 'Update'));
