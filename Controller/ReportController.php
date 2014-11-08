@@ -95,12 +95,13 @@ class ReportController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Report $entity)
+    private function createCreateForm(Report $entity, $cFGroup)
     {
         $form = $this->createForm(new ReportType(), $entity, array(
             'action' => $this->generateUrl('report_create'),
             'method' => 'POST',
             'em' => $this->getDoctrine()->getManager(),
+            'cFGroup' => $cFGroup,
         ));
 
         $form->add('submit', 'submit', array('label' => 'Create'));
@@ -120,13 +121,14 @@ class ReportController extends Controller
 
         $cFGroupId = $request->query->get('cFGroup');
 
-        if($cFGroupId) {
-            $entity->setCFGroup(
-                $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cFGroupId)
-            );
+        if(! $cFGroupId) {
+            throw new Exception("Error Processing Request", 1);
         }
 
-        $form = $this->createCreateForm($entity);
+        $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cFGroupId);
+        $entity->setCFGroup($cFGroup);
+
+        $form = $this->createCreateForm($entity, $cFGroup);
 
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
             'entity' => $entity,

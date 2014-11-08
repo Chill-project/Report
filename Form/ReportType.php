@@ -24,7 +24,7 @@ class ReportType extends AbstractType
             ->add('person')
             ->add('date')
             ->add('scope')
-            ->add('cFData')
+            ->add('cFData', 'custom_field', array('group' => $options['cFGroup']))
             ->add(
                 $builder->create('cFGroup', 'text')
                 ->addModelTransformer($transformer)
@@ -43,10 +43,12 @@ class ReportType extends AbstractType
 
         $resolver->setRequired(array(
             'em',
+            'cFGroup',
         ));
 
         $resolver->setAllowedTypes(array(
             'em' => 'Doctrine\Common\Persistence\ObjectManager',
+            'cFGroup' => 'Chill\CustomFieldsBundle\Entity\CustomFieldsGroup'
         ));
     }
 
