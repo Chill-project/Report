@@ -1,11 +1,24 @@
 report_select_type:
-    pattern:  /person/{person_id}/report/create
+    pattern:  /person/{person_id}/report/select/type/for/creation
     defaults: { _controller: "ChillReportBundle:Report:selectReportType" }
     options:
         menus:
             person:
                 order: 100
                 label: Add a report
+
+report_new:
+    path:     /person/{person_id}/report/cfgroup/{cf_group_id}/new
+    defaults: { _controller: "ChillReportBundle:Report:new" }
+
+report_create: 
+    path:     /person/{person_id}/report/cfgroup/{cf_group_id}/create
+    defaults: { _controller: "ChillReportBundle:Report:create" }
+    requirements: { _method: post }
+
+report_show:
+    path:     report/{id}/show
+    defaults: { _controller: "ChillReportBundle:Report:show" }
 
 cl_custom_fields_report:
     resource: "@ChillReportBundle/Resources/config/routing/report.yml"

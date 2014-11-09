@@ -20,8 +20,6 @@ class ReportType extends AbstractType
         $transformer = new CustomFieldsGroupToIdTransformer($entityManager);
 
         $builder
-            ->add('user')
-            ->add('person')
             ->add('date')
             ->add('scope')
             ->add('cFData', 'custom_field', array('group' => $options['cFGroup']))
