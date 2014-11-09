@@ -1,0 +1,13 @@
+{% extends "ChillMainBundle::layout.html.twig" %}
+ 
+
+ {% block content %}
+
+    {{ form_start(form) }}
+        {{ form_row(form) }}
+        <button type="submit">
+            Create a new report
+        </button>
+    {{ form_end(form) }} 
+ 
+{% endblock %}
