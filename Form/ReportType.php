@@ -6,8 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Chill\CustomFieldsBundle\Form\DataTransformer\CustomFieldsGroupToIdTransformer;
-
 class ReportType extends AbstractType
 {
     /**
@@ -17,16 +15,11 @@ class ReportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $entityManager = $options['em'];
-        $transformer = new CustomFieldsGroupToIdTransformer($entityManager);
 
         $builder
             ->add('date')
             ->add('scope')
             ->add('cFData', 'custom_field', array('group' => $options['cFGroup']))
-            ->add(
-                $builder->create('cFGroup', 'text')
-                ->addModelTransformer($transformer)
-            )
         ;
     }
     
