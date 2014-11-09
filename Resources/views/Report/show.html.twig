@@ -1,6 +1,6 @@
-{% extends '::base.html.twig' %}
+{% extends "ChillMainBundle::layout.html.twig" %}
 
-{% block body -%}
+{% block content %}
     <h1>Report</h1>
 
     <table class="record_properties">
@@ -10,7 +10,7 @@
                 <td>{{ entity.id }}</td>
             </tr>
             <tr>
-                <th>Userr</th>
+                <th>User</th>
                 <td>{{ entity.user }}</td>
             </tr>
             <tr>
@@ -27,11 +27,11 @@
             </tr>
             <tr>
                 <th>Cfdata</th>
-                <td>{{ entity.cFData }}</td>
+                <td>{# { entity.cFData } #}</td>
             </tr>
             <tr>
                 <th>Cfgroup</th>
-                <td>{{ entity.cFGroup }}</td>
+                <td>{{ entity.cFGroup.getName(app.request.locale) }}</td>
             </tr>
         </tbody>
     </table>
