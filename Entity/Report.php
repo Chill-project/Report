@@ -84,7 +84,7 @@ class Report
      */
     public function setUser($user)
     {
-        $this->userr = $user;
+        $this->user = $user;
 
         return $this;
     }
