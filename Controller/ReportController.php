@@ -59,10 +59,6 @@ class ReportController extends Controller
     {
         $cFGroupId = $request->query->get('cFGroup');
 
-        echo('----');
-        echo($cFGroupId);
-        echo('----');
-
         if($cFGroupId) {
             return $this->redirect(
                 $this->generateUrl('report_new',
