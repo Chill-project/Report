@@ -1,6 +1,8 @@
-{% extends "ChillMainBundle::layout.html.twig" %}
+{% extends "ChillPersonBundle::layout.html.twig"  %}
 
-{% block content %}
+{% set activeRouteKey = 'report_select_type' %}
+
+{% block personcontent %}
 
     {{ form_start(form) }}
         {{ form_row(form) }}

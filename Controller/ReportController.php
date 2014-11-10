@@ -86,6 +86,8 @@ class ReportController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
+
         $cFGroups = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
             ->findByEntity('Chill\ReportBundle\Entity\Report');
 
@@ -106,7 +108,8 @@ class ReportController extends Controller
             ->getForm();
 
         return $this->render('ChillReportBundle:Report:select_report_type.html.twig', array(
-            'form'     => $form->createView()
+            'form'     => $form->createView(),
+            'person'   => $person
         ));
     }
 
