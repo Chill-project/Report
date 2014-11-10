@@ -2,10 +2,6 @@ report:
     path:     /
     defaults: { _controller: "ChillReportBundle:Report:index" }
 
-report_show:
-    path:     /{id}/show
-    defaults: { _controller: "ChillReportBundle:Report:show" }
-
 report_edit:
     path:     /{id}/edit
     defaults: { _controller: "ChillReportBundle:Report:edit" }

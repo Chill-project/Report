@@ -121,6 +121,8 @@ class ReportController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
+
         $entity = new Report();
 
         $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cf_group_id);
@@ -131,6 +133,7 @@ class ReportController extends Controller
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'person'   => $person
         ));
     }
 
@@ -161,7 +164,8 @@ class ReportController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('report_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('report_show', 
+                array('person_id' => $person_id,'id' => $entity->getId())));
         }
 
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
@@ -196,9 +200,11 @@ class ReportController extends Controller
      * Finds and displays a Report entity.
      *
      */
-    public function showAction($id)
+    public function showAction($id, $person_id)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
 
         $entity = $em->getRepository('ChillReportBundle:Report')->find($id);
 
@@ -206,11 +212,12 @@ class ReportController extends Controller
             throw $this->createNotFoundException('Unable to find Report entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        //$deleteForm = $this->createDeleteForm($id);
 
         return $this->render('ChillReportBundle:Report:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'person' => $person,
+            //'delete_form' => $deleteForm->createView(),
         ));
     }
 

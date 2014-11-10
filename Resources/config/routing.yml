@@ -6,7 +6,6 @@ report_select_type:
             person:
                 order: 100
                 label: Add a report
-
 report_new:
     path:     /person/{person_id}/report/cfgroup/{cf_group_id}/new
     defaults: { _controller: "ChillReportBundle:Report:new" }
@@ -17,7 +16,7 @@ report_create:
     requirements: { _method: post }
 
 report_show:
-    path:     report/{id}/show
+    path:     /person/{person_id}/report/{id}/show
     defaults: { _controller: "ChillReportBundle:Report:show" }
 
 cl_custom_fields_report:

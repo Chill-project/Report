@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #}
-{% extends "ChillMainBundle::layout.html.twig" %}
+{% extends "ChillPersonBundle::layout.html.twig"  %}
 
-{% block content %}
-    <h1>Report</h1>
+{% set activeRouteKey = 'report_select_type' %}
 
+{% block title %}{{ 'Details d\' un rapport' |trans() }}{% endblock title %}
+
+{% block personcontent %}
     <table class="record_properties">
         <tbody>
             <tr>
@@ -51,18 +53,4 @@
             </tr>
         </tbody>
     </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('report') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('report_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
 {% endblock %}
