@@ -29,20 +29,25 @@ use Chill\CustomFieldsBundle\Entity\CustomFieldsGroup;
 /**
  * Load CustomFieldsGroup for Report into database
  */
-class LoadCustomFieldsGroup extends AbstractFixture implements OrderedFixtureInterface {
-    public function getOrder() {
+class LoadCustomFieldsGroup extends AbstractFixture implements OrderedFixtureInterface
+{
+    public function getOrder()
+    {
         return 15000;
     }
     
-    public function load(ObjectManager $manager) {
+    public function load(ObjectManager $manager)
+    {
         echo "loading customFieldsGroup...\n";
 
         for($i=0; $i <= 3; $i++) {
+            echo "CFGroup Report {$i}\n";
             $cFGroup = (new CustomFieldsGroup())
                 ->setName(array('fr' => 'CFGroup Report ' . $i))
                 ->setEntity('Chill\ReportBundle\Entity\Report');
 
             $manager->persist($cFGroup);
+            $this->addReference('cf_group_report_'.$i, $cFGroup);
         }
         $manager->flush();
     }
