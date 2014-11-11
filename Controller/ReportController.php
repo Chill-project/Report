@@ -194,12 +194,9 @@ class ReportController extends Controller
             throw $this->createNotFoundException('Unable to find Report entity.');
         }
 
-        //$deleteForm = $this->createDeleteForm($id);
-
         return $this->render('ChillReportBundle:Report:show.html.twig', array(
             'entity' => $entity,
             'person' => $person,
-            //'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -275,45 +272,5 @@ class ReportController extends Controller
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-    /**
-     * Deletes a Report entity.
-     *
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('ChillReportBundle:Report')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Report entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('report'));
-    }
-
-    /**
-     * Creates a form to delete a Report entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('report_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
     }
 }
