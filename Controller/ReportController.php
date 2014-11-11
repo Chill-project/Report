@@ -147,7 +147,7 @@ class ReportController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('report_show', 
-                array('person_id' => $person_id,'id' => $entity->getId())));
+                array('person_id' => $person_id,'report_id' => $entity->getId())));
         }
 
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
@@ -182,13 +182,13 @@ class ReportController extends Controller
      * Finds and displays a Report entity.
      *
      */
-    public function showAction($id, $person_id)
+    public function showAction($report_id, $person_id)
     {
         $em = $this->getDoctrine()->getManager();
 
         $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
 
-        $entity = $em->getRepository('ChillReportBundle:Report')->find($id);
+        $entity = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Report entity.');
@@ -204,73 +204,79 @@ class ReportController extends Controller
      * Displays a form to edit an existing Report entity.
      *
      */
-    public function editAction($id)
+    public function editAction($person_id, $report_id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ChillReportBundle:Report')->find($id);
+        $report = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Report entity.');
+        if (!$report) {
+            throw $this->createNotFoundException('Unable to find the report.');
         }
 
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        if(intval($person_id) !== intval($report->getPerson()->getId())) {
+            throw new Exception("This is not the report of the person", 1);
+        }
+
+        $person = $report->getPerson();
+
+        $editForm = $this->createEditForm($report, $person->getId());
 
         return $this->render('ChillReportBundle:Report:edit.html.twig', array(
-            'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'person' => $person,
         ));
     }
 
     /**
-    * Creates a form to edit a Report entity.
-    *
-    * @param Report $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Report $entity)
+     * Creates a form to edit a Report entity.
+     *
+     * @param Report $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Report $entity, $person_id)
     {
         $form = $this->createForm(new ReportType(), $entity, array(
-            'action' => $this->generateUrl('report_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('report_update', 
+                array('person_id' => $person_id, 'report_id' => $entity->getId())),
             'method' => 'PUT',
             'em' => $this->getDoctrine()->getManager(),
+            'cFGroup' => $entity->getCFGroup(),
         ));
 
         $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
     }
+
     /**
      * Edits an existing Report entity.
      *
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction($person_id, $report_id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ChillReportBundle:Report')->find($id);
+        $report = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Report entity.');
+        if (!$report) {
+            throw $this->createNotFoundException('Unable to find the report '.$report_id.'.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($report, $person_id);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('report_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('report_edit', 
+                array('person_id' => $report->getPerson()->getId(), 'report_id' => $report_id)));
         }
 
         return $this->render('ChillReportBundle:Report:edit.html.twig', array(
-            'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'person' => $person
         ));
     }
 }

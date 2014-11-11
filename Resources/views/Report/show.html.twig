@@ -51,6 +51,10 @@
                 <th>Cfgroup</th>
                 <td>{{ entity.cFGroup.getName(app.request.locale) }}</td>
             </tr>
+            <tr>
+                <th></th>
+                <td><a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}">{{ 'update' | trans }}</a></td>
+            </tr>
         </tbody>
     </table>
 {% endblock %}

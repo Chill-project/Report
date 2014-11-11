@@ -23,11 +23,15 @@ report_list:
             person:
                 order: 101
                 label: Report list
-
 report_show:
-    path:     /person/{person_id}/report/{id}/show
+    path:     /person/{person_id}/report/{report_id}/show
     defaults: { _controller: "ChillReportBundle:Report:show" }
 
-cl_custom_fields_report:
-    resource: "@ChillReportBundle/Resources/config/routing/report.yml"
-    prefix:   /report
+report_edit:
+    path:     /person/{person_id}/report/{report_id}/edit
+    defaults: { _controller: "ChillReportBundle:Report:edit" }
+
+report_update:
+    path:     /person/{person_id}/report/{report_id}/update
+    defaults: { _controller: "ChillReportBundle:Report:update" }
+    requirements: { _method: post|put }
