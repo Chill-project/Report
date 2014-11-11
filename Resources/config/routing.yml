@@ -15,6 +15,15 @@ report_create:
     defaults: { _controller: "ChillReportBundle:Report:create" }
     requirements: { _method: post }
 
+report_list: 
+    path:     /person/{person_id}/report/list
+    defaults: { _controller: "ChillReportBundle:Report:list" }
+    options:
+        menus:
+            person:
+                order: 101
+                label: Report list
+
 report_show:
     path:     /person/{person_id}/report/{id}/show
     defaults: { _controller: "ChillReportBundle:Report:show" }

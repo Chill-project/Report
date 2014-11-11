@@ -38,35 +38,17 @@ class ReportController extends Controller
      * Lists all Report entities.
      *
      */
-    public function indexAction(Request $request)
+    public function listAction($person_id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('ChillReportBundle:Report')->findAll();
+        $reports = $em->getRepository('ChillReportBundle:Report')->findByPerson($person_id);
 
-        $cFGroups = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
-            ->findByEntity('Chill\ReportBundle\Entity\Report');
+        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
 
-        $cFGroupsChoice = array();
-
-        foreach ($cFGroups as $cFGroup) {
-            $cFGroupsChoice[$cFGroup->getId()] = $cFGroup->getName($request->getLocale());
-        }
-
-        $form = $this->get('form.factory')
-            ->createNamedBuilder(null, 'form', null, array(
-                'method' => 'GET',
-                'action' => $this->generateUrl('report_new'),
-                'csrf_protection' => false
-            ))
-            ->add('cFGroup', 'choice', array(
-                'choices' => $cFGroupsChoice
-            ))
-            ->getForm();
-
-        return $this->render('ChillReportBundle:Report:index.html.twig', array(
-            'entities' => $entities,
-            'form'     => $form->createView()
+        return $this->render('ChillReportBundle:Report:list.html.twig', array(
+            'reports' => $reports,
+            'person'   => $person
         ));
     }
 
