@@ -44,7 +44,38 @@ class LoadCustomField extends AbstractFixture implements OrderedFixtureInterface
             array('type' => 'text', 'options' => array('maxLength' => '255')),
             array('type' => 'text', 'options' => array('maxLength' => '1000')),
             array('type' => 'text', 'options' => array('maxLength' => '2000')),
-            ];
+            array('type' => 'title', 'options' => array('type' => 'title')),
+            array('type' => 'title', 'options' => array('type' => 'subtitle')),
+            array('type' => 'choice', 'options' => array(
+                'multiple' => false,
+                'expanded'=> false,
+                'other' => false,
+                'choices'=> [
+                    array(
+                        'name' => array(
+                            'fr' => 'Options 1 FR',
+                            'nl' => 'Options 1 NL',
+                            'en' => 'Options 1 EN'),
+                        'active' => true,
+                        'slug' => 'el-1-fr'),
+                    array(
+                        'name' => array(
+                            'fr' => 'Options 2 FR',
+                            'nl' => 'Options 2 NL',
+                            'en' => 'Options 2 EN'),
+                        'active' => true,
+                        'slug' => 'el-2-fr'),
+                    array(
+                        'name' => array(
+                            'fr' => 'Options 2 FR',
+                            'nl' => 'Options 2 NL',
+                            'en' => 'Options 2 EN'),
+                        'active' => true,
+                        'slug' => 'el-3-fr')
+                    ]
+                )
+            )
+        ];
 
         for($i=0; $i <= 25; $i++) {
             echo "CustomField {$i}\n";
