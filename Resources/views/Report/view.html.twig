@@ -23,7 +23,7 @@
 {% block personcontent %}
 
 
-    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}">{{ 'Modifier' | trans }}</a>
+    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update' | trans }}</a>
 
     <h2>{{ 'Details'|trans }}</h2>
 
@@ -49,6 +49,6 @@
         {% endfor %}
     </dl>
 
-    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}">{{ 'Modifier' | trans }}</a>
+    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update' | trans }}</a>
 
 {% endblock %}
