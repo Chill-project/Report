@@ -21,40 +21,34 @@
 {% block title %}{{ 'Details d\' un rapport' |trans() }}{% endblock title %}
 
 {% block personcontent %}
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>User</th>
-                <td>{{ entity.user }}</td>
-            </tr>
-            <tr>
-                <th>Person</th>
-                <td>{{ entity.person }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ entity.date|date('d-m-Y') }}</td>
-            </tr>
-            <tr>
-                <th>Scope</th>
-                <td>{{ entity.scope }}</td>
-            </tr>
-            <tr>
-                <th>Cfdata</th>
-                <td>{# { entity.cFData } #}</td>
-            </tr>
-            <tr>
-                <th>Cfgroup</th>
-                <td>{{ entity.cFGroup.getName(app.request.locale) }}</td>
-            </tr>
-            <tr>
-                <th></th>
-                <td><a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}">{{ 'update' | trans }}</a></td>
-            </tr>
-        </tbody>
-    </table>
+
+
+    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}">{{ 'Modifier' | trans }}</a>
+
+    <h2>{{ 'Details'|trans }}</h2>
+
+    <dl>
+        <dt class="inline">{{ 'Personne'|trans }}</dt>
+        <dd>{{ entity.person }}</dd>
+        <dt class="inline">{{ 'Scope'|trans }}</dt>
+        <dd>{{ entity.scope }}</dd>
+        <dt class="inline">{{ 'Date'|trans }}</dt>
+        <dd>{{ entity.date|date('d-m-Y') }}</dd>
+        <dt class="inline">{{ 'Agent'|trans }}</dt>
+        <dd>{{ entity.user }}</dd>
+        <dt class="inline">{{ 'Type de rapport'|trans }}</dt>
+        <dd>{{ entity.cFGroup.getName(app.request.locale) }}</dd>
+
+        {% for customField in entity.cFGroup.customFields %}
+            {% if customField.type == 'title' %}
+                {{ chill_custom_field_widget(entity.cFData , customField) }}
+            {% else %}
+                <dt>{{ chill_custom_field_label(customField) }}</dt>
+                <dd>{{ chill_custom_field_widget(entity.cFData , customField) }}</dd>
+            {% endif %}
+        {% endfor %}
+    </dl>
+
+    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}">{{ 'Modifier' | trans }}</a>
+
 {% endblock %}
