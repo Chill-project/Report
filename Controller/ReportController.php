@@ -106,6 +106,7 @@ class ReportController extends Controller
         $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
 
         $entity = new Report();
+        $entity->setUser($this->get('security.context')->getToken()->getUser());
 
         $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cf_group_id);
         $entity->setCFGroup($cFGroup);
@@ -139,9 +140,6 @@ class ReportController extends Controller
 
             $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
             $entity->setPerson($person);
-        
-            $user = $this->get('security.context')->getToken()->getUser();
-            $entity->setUser($user);
             
             $em->persist($entity);
             $em->flush();

@@ -36,9 +36,12 @@ class ReportType extends AbstractType
         $entityManager = $options['em'];
 
         $builder
-            ->add('date', 'date', array('required' => false, 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'))
+            ->add('user')
+            ->add('date', 'date', 
+                array('required' => false, 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'))
             ->add('scope')
-            ->add('cFData', 'custom_field', array('attr' => array('class' => 'only-label'), 'group' => $options['cFGroup']))
+            ->add('cFData', 'custom_field', 
+                array('attr' => array('class' => 'only-label'), 'group' => $options['cFGroup']))
         ;
     }
     
