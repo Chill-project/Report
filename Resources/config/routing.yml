@@ -1,5 +1,5 @@
 report_select_type:
-    pattern:  /person/{person_id}/report/select/type/for/creation
+    pattern:  /{_locale}/person/{person_id}/report/select/type/for/creation
     defaults: { _controller: "ChillReportBundle:Report:selectReportType" }
     options:
         menus:
@@ -7,16 +7,16 @@ report_select_type:
                 order: 100
                 label: Add a report
 report_new:
-    path:     /person/{person_id}/report/cfgroup/{cf_group_id}/new
+    path:     /{_locale}/person/{person_id}/report/cfgroup/{cf_group_id}/new
     defaults: { _controller: "ChillReportBundle:Report:new" }
 
 report_create: 
-    path:     /person/{person_id}/report/cfgroup/{cf_group_id}/create
+    path:     /{_locale}/person/{person_id}/report/cfgroup/{cf_group_id}/create
     defaults: { _controller: "ChillReportBundle:Report:create" }
     requirements: { _method: post }
 
 report_list: 
-    path:     /person/{person_id}/report/list
+    path:     /{_locale}/person/{person_id}/report/list
     defaults: { _controller: "ChillReportBundle:Report:list" }
     options:
         menus:
@@ -24,14 +24,14 @@ report_list:
                 order: 101
                 label: Report list
 report_view:
-    path:     /person/{person_id}/report/{report_id}/view
+    path:     /{_locale}/person/{person_id}/report/{report_id}/view
     defaults: { _controller: "ChillReportBundle:Report:view" }
 
 report_edit:
-    path:     /person/{person_id}/report/{report_id}/edit
+    path:     /{_locale}/person/{person_id}/report/{report_id}/edit
     defaults: { _controller: "ChillReportBundle:Report:edit" }
 
 report_update:
-    path:     /person/{person_id}/report/{report_id}/update
+    path:     /{_locale}/person/{person_id}/report/{report_id}/update
     defaults: { _controller: "ChillReportBundle:Report:update" }
     requirements: { _method: post|put }
