@@ -144,13 +144,26 @@ class ReportController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            $this->get('session')
+                ->getFlashBag()
+                ->add('success', 
+                    $this->get('translator')
+                    ->trans('Report created')
+                );
+
             return $this->redirect($this->generateUrl('report_view', 
                 array('person_id' => $person_id,'report_id' => $entity->getId())));
         }
 
+        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
+
+        $this->get('session')
+            ->getFlashBag()->add('danger', 'Errors : the report has not been created !');
+
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'person' => $person
         ));
     }
 
@@ -268,13 +281,25 @@ class ReportController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('report_edit', 
+            $this->get('session')
+                ->getFlashBag()
+                ->add('success', 
+                    $this->get('translator')
+                    ->trans('Report updated')
+                );
+
+            return $this->redirect($this->generateUrl('report_view', 
                 array('person_id' => $report->getPerson()->getId(), 'report_id' => $report_id)));
         }
 
+        $errors = $editForm->getErrorsAsString();
+
+        $this->get('session')
+            ->getFlashBag()->add('danger', 'Errors : the report has not been updated !');
+
         return $this->render('ChillReportBundle:Report:edit.html.twig', array(
             'edit_form'   => $editForm->createView(),
-            'person' => $person
+            'person' => $report->getPerson()
         ));
     }
 }
