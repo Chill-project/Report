@@ -23,9 +23,9 @@ report_list:
             person:
                 order: 101
                 label: Report list
-report_show:
-    path:     /person/{person_id}/report/{report_id}/show
-    defaults: { _controller: "ChillReportBundle:Report:show" }
+report_view:
+    path:     /person/{person_id}/report/{report_id}/view
+    defaults: { _controller: "ChillReportBundle:Report:view" }
 
 report_edit:
     path:     /person/{person_id}/report/{report_id}/edit

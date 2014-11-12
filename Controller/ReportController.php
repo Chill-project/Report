@@ -146,7 +146,7 @@ class ReportController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('report_show', 
+            return $this->redirect($this->generateUrl('report_view', 
                 array('person_id' => $person_id,'report_id' => $entity->getId())));
         }
 
@@ -182,7 +182,7 @@ class ReportController extends Controller
      * Finds and displays a Report entity.
      *
      */
-    public function showAction($report_id, $person_id)
+    public function viewAction($report_id, $person_id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -194,7 +194,7 @@ class ReportController extends Controller
             throw $this->createNotFoundException('Unable to find Report entity.');
         }
 
-        return $this->render('ChillReportBundle:Report:show.html.twig', array(
+        return $this->render('ChillReportBundle:Report:view.html.twig', array(
             'entity' => $entity,
             'person' => $person,
         ));
