@@ -73,6 +73,14 @@ class ReportController extends Controller
         $cFGroups = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
             ->findByEntity('Chill\ReportBundle\Entity\Report');
 
+
+        if(count($cFGroups) === 1 ){
+            return $this->redirect(
+                $this->generateUrl('report_new', 
+                    array('person_id' => $person_id, 'cf_group_id' => $cFGroups[0]->getId())));
+        }
+
+
         $cFGroupsChoice = array();
 
         foreach ($cFGroups as $cFGroup) {
