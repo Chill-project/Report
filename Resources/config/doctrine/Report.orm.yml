@@ -13,6 +13,7 @@ Chill\ReportBundle\Entity\Report:
         scope:
             type: string
             length: 255
+            nullable: true # TO REMOVE IF SCOPE IS USED
         cFData:
             type: json_array
     manyToOne:
