@@ -21,5 +21,12 @@
 {% block title %}{{ 'Ajout d\' un rapport' |trans() }}{% endblock title %}
 
 {% block personcontent %}
-    {{ form(form) }}
+    {{ form_start(form) }}
+
+    {{ form_widget(form) }}
+        <div class="grid-12 centered sticky-form-buttons">
+            <button class="sc-button green" type="submit"><i class="fa fa-save"></i> Save</button>
+            <button class="sc-button red" type="reset"><i class="fa fa-eraser"></i>Reset</button>
+        </div>
+    {{ form_end(form) }}
 {% endblock %}

@@ -192,8 +192,6 @@ class ReportController extends Controller
             'cFGroup' => $cFGroup,
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
         return $form;
     }
 
@@ -263,8 +261,6 @@ class ReportController extends Controller
             'em' => $this->getDoctrine()->getManager(),
             'cFGroup' => $entity->getCFGroup(),
         ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
     }
