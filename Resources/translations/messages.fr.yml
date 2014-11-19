@@ -6,9 +6,22 @@
 'Create a new report': 'Créer un nouveau rapport'
 'Report view': "Détails d'un rapport"
 'Update the report': 'Mettre à jour le rapport'
+'Report list': 'Liste des rapports'
 Details: Détails
 Person: Personne
 Scope: Scope
 Date: Date
 User: Utilisateur
 'Report type': 'Type de rapport'
+'View the report': "Voir le rapport"
+'Update the report': "Mettre à jour le rapport"
+
+#Flash messages
+'Success : report created!': "Succès : le rapport a bien été créé !"
+'The form is not valid. The report has not been created !': "Le formulaire comporte des erreurs, le rapport n'a pas été créé"
+'Success : report updated!': "Succès : le rapport a bien été mis à jour !"
+'The form is not valid. The report has not been updated !': "Le formulaire comporte des erreurs, le rapport n'a pas été mis à jour"
+
+#Exception messags
+'Unable to find this report.': Rapport introuvable.
+'This is not the report of the person.': "La personne et le rapport sélectionnés ne sont pas associés"

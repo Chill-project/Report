@@ -156,7 +156,7 @@ class ReportController extends Controller
                 ->getFlashBag()
                 ->add('success', 
                     $this->get('translator')
-                    ->trans('Report created')
+                        ->trans('Success : report created!')
                 );
 
             return $this->redirect($this->generateUrl('report_view', 
@@ -166,7 +166,10 @@ class ReportController extends Controller
         $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
 
         $this->get('session')
-            ->getFlashBag()->add('danger', 'Errors : the report has not been created !');
+            ->getFlashBag()->add('danger',
+                $this->get('translator')
+                    ->trans('The form is not valid. The report has not been created !')
+            );
 
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
             'entity' => $entity,
@@ -208,7 +211,8 @@ class ReportController extends Controller
         $entity = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Report entity.');
+            throw $this->createNotFoundException(
+                $this->get('translator')->trans('Unable to find this report.'));
         }
 
         return $this->render('ChillReportBundle:Report:view.html.twig', array(
@@ -228,11 +232,13 @@ class ReportController extends Controller
         $report = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
         if (!$report) {
-            throw $this->createNotFoundException('Unable to find the report.');
+            throw $this->createNotFoundException(
+                $this->get('translator')->trans('Unable to find this report.'));
         }
 
         if(intval($person_id) !== intval($report->getPerson()->getId())) {
-            throw new Exception("This is not the report of the person", 1);
+            throw new Exception(
+                $this->get('translator')->trans('This is not the report of the person.'), 1);
         }
 
         $person = $report->getPerson();
@@ -276,7 +282,8 @@ class ReportController extends Controller
         $report = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
         if (!$report) {
-            throw $this->createNotFoundException('Unable to find the report '.$report_id.'.');
+            throw $this->createNotFoundException(
+                $this->get('translator')->trans('Unable to find this report.'));
         }
 
         $editForm = $this->createEditForm($report, $person_id);
@@ -289,7 +296,7 @@ class ReportController extends Controller
                 ->getFlashBag()
                 ->add('success', 
                     $this->get('translator')
-                    ->trans('Report updated')
+                        ->trans('Success : report updated!')
                 );
 
             return $this->redirect($this->generateUrl('report_view', 
@@ -299,7 +306,11 @@ class ReportController extends Controller
         $errors = $editForm->getErrorsAsString();
 
         $this->get('session')
-            ->getFlashBag()->add('danger', 'Errors : the report has not been updated !');
+            ->getFlashBag()
+            ->add('danger',
+                $this->get('translator')
+                    ->trans('The form is not valid. The report has not been updated !')
+            );
 
         return $this->render('ChillReportBundle:Report:edit.html.twig', array(
             'edit_form'   => $editForm->createView(),
