@@ -38,7 +38,7 @@ class ReportType extends AbstractType
         $builder
             ->add('user')
             ->add('date', 'date', 
-                array('required' => false, 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'))
+                array('required' => true, 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'))
             //->add('scope')
             ->add('cFData', 'custom_field', 
                 array('attr' => array('class' => 'only-label'), 'group' => $options['cFGroup']))

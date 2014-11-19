@@ -18,17 +18,16 @@
 
 {% set activeRouteKey = 'report_select_type' %}
 
-{% block title %}{{ 'Ajout d\' un rapport' |trans() }}{% endblock title %}
+{% block title %}{{ 'Add a report'|trans() }}{% endblock title %}
 
 {% block personcontent %}
 
 
 {{ form_start(form) }}
-    {{ form_row(form.cFGroup) }}
-
+    {{ form_widget(form.cFGroup) }}
     <button class="sc-button green" type="submit">
         <i class="fa fa-plus"></i>
-        Create a new report
+        {{ 'Create a new report'|trans }}
     </button>
 {{ form_end(form) }}
 

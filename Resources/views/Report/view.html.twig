@@ -18,25 +18,25 @@
 
 {% set activeRouteKey = 'report_select_type' %}
 
-{% block title %}{{ 'Details d\' un rapport' |trans() }}{% endblock title %}
+{% block title %}{{ 'Report view' |trans() }}{% endblock title %}
 
 {% block personcontent %}
 
 
-    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update' | trans }}</a>
+    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update the report'|trans }}</a>
 
     <h2>{{ 'Details'|trans }}</h2>
 
     <dl>
-        <dt class="inline">{{ 'Personne'|trans }}</dt>
+        <dt class="inline">{{ 'Person'|trans }}</dt>
         <dd>{{ entity.person }}</dd>
         <!-- <dt class="inline">{{ 'Scope'|trans }}</dt>
         <dd>{{ entity.scope }}</dd> -->
         <dt class="inline">{{ 'Date'|trans }}</dt>
         <dd>{{ entity.date|date('d-m-Y') }}</dd>
-        <dt class="inline">{{ 'Agent'|trans }}</dt>
+        <dt class="inline">{{ 'User'|trans }}</dt>
         <dd>{{ entity.user }}</dd>
-        <dt class="inline">{{ 'Type de rapport'|trans }}</dt>
+        <dt class="inline">{{ 'Report type'|trans }}</dt>
         <dd>{{ entity.cFGroup.getName(app.request.locale) }}</dd>
 
         {% for customField in entity.cFGroup.customFields %}
@@ -49,6 +49,6 @@
         {% endfor %}
     </dl>
 
-    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update' | trans }}</a>
+    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update the report' | trans }}</a>
 
 {% endblock %}

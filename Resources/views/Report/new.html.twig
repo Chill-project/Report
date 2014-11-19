@@ -18,15 +18,15 @@
 
 {% set activeRouteKey = 'report_select_type' %}
 
-{% block title %}{{ 'Ajout d\' un rapport' |trans() }}{% endblock title %}
+{% block title %}{{ 'Add a report'|trans }}{% endblock title %}
 
 {% block personcontent %}
     {{ form_start(form) }}
 
     {{ form_widget(form) }}
         <div class="grid-12 centered sticky-form-buttons">
-            <button class="sc-button green" type="submit"><i class="fa fa-save"></i> Save</button>
-            <button class="sc-button red" type="reset"><i class="fa fa-eraser"></i>Reset</button>
+            <button class="sc-button green" type="submit"><i class="fa fa-save"></i>{{ 'Add report'|trans }}</button>
+            <button class="sc-button red" type="reset"><i class="fa fa-eraser"></i>{{ 'Reset report'|trans }}t</button>
         </div>
     {{ form_end(form) }}
 {% endblock %}
