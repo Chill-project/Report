@@ -29,4 +29,23 @@
             <button class="sc-button red" type="reset"><i class="fa fa-eraser"></i> {{ 'Reset report'|trans }}</button>
         </div>
     {{ form_end(edit_form) }}
+    
+<script type="text/javascript">
+var form = $("form[name='{{ edit_form.vars.form.vars.name }}']").data('serialize',$("form[name='{{ edit_form.vars.form.vars.name }}']").serialize());
+// On load save form current state
+var submittedOk{{ edit_form.vars.form.vars.name }} = false;
+form.bind('submit', function(e) {
+    submittedOk{{ edit_form.vars.form.vars.name }} = true;
+});
+
+$(window).bind('beforeunload', function(e){
+    if($("form[name='{{ edit_form.vars.form.vars.name }}']").serialize()!=$("form[name='{{ edit_form.vars.form.vars.name }}']").data('serialize')){
+        if (submittedOk{{ edit_form.vars.form.vars.name }} == false) {
+            return "{{ 'You are going to leave a page with unsubmitted data. Are you sure you want to leave ?'|trans }}";
+            }
+        }
+    e=null;
+    // i.e; if form state change show box not.
+});
+</script>
 {% endblock %}
