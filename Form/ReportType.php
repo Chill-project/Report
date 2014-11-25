@@ -41,7 +41,7 @@ class ReportType extends AbstractType
                 array('required' => true, 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'))
             //->add('scope')
             ->add('cFData', 'custom_field', 
-                array('attr' => array('class' => 'only-label'), 'group' => $options['cFGroup']))
+                array('attr' => array('class' => 'cf-fields'), 'group' => $options['cFGroup']))
         ;
     }
     
