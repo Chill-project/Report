@@ -1,0 +1,27 @@
+'Report edit': Dossier uitgave
+'Save report': Bewaar consultatiegegevens
+'Reset report': Verwijder consultatiegegevens
+'Add a report': Voeg een consultatierapport toe
+'Add report': 'Voeg rapport toe'
+'Create a new report': 'Maak een nieuw consultatieblad aan'
+'Report view': "Details van de consultatiegegevens"
+'Update the report': 'Vul dossier aan'
+'Report list': 'Overzicht van de consultaties'
+Details: Details
+Person: Person
+Scope: Scope
+Date: Datum
+User: Gebruiker
+
+'View the report': "Bekijk de consultatiegegevens"
+'Update the report': "Update van de consultatiegegevens"
+
+#Flash messages
+'Success : report created!': "De consultatiegegevens zijn correct ingevuld!"
+'The form is not valid. The report has not been created !': "De gegevens zijn niet correct, er wordt geen rapport gemaakt"
+'Success : report updated!': "Update is gelukt"
+'The form is not valid. The report has not been updated !': "Update is mislukt, probeer opnieuw."
+
+#Exception messags
+'Unable to find this report.': Dossier is onvindbaar
+'This is not the report of the person.': "Dit is niet het dossier van deze person"
