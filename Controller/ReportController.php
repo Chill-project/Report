@@ -115,6 +115,7 @@ class ReportController extends Controller
 
         $entity = new Report();
         $entity->setUser($this->get('security.context')->getToken()->getUser());
+        $entity->setDate(new \DateTime('now'));
 
         $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cf_group_id);
         $entity->setCFGroup($cFGroup);
