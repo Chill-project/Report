@@ -25,3 +25,5 @@ User: Utilisateur
 #Exception messags
 'Unable to find this report.': Rapport introuvable.
 'This is not the report of the person.': "La personne et le rapport sélectionnés ne sont pas associés"
+
+'You are going to leave a page with unsubmitted data. Are you sure you want to leave ?': 'Vous allez quitter la page alors que des données n\'ont pas été enregistrées. Êtes vous sûr de vouloir partir ?'

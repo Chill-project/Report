@@ -12,7 +12,7 @@ Person: Person
 Scope: Scope
 Date: Datum
 User: Gebruiker
-
+'Report type': 'Soort of verslag'
 'View the report': "Bekijk de consultatiegegevens"
 'Update the report': "Update van de consultatiegegevens"
 
@@ -25,3 +25,5 @@ User: Gebruiker
 #Exception messags
 'Unable to find this report.': Dossier is onvindbaar
 'This is not the report of the person.': "Dit is niet het dossier van deze person"
+
+'You are going to leave a page with unsubmitted data. Are you sure you want to leave ?': 'U bent aan te vertrekken een pagina die veranderdt datas behoudt. Bent u er zeker van dat u wil vertrekken ?'
