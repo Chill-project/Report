@@ -16,6 +16,7 @@ class AppKernel extends Kernel
             new Chill\MainBundle\ChillMainBundle(),
             new Chill\PersonBundle\ChillPersonBundle(),
             new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
         );   
     }
 
