@@ -12,7 +12,10 @@ class AppKernel extends Kernel
             new Chill\ReportBundle\ChillReportBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Chill\CustomFieldsBundle\ChillCustomFieldsBundle(),
-            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle()
+            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Chill\MainBundle\ChillMainBundle(),
+            new Chill\PersonBundle\ChillPersonBundle(),
+            new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
         );   
     }
 

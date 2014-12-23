@@ -4,3 +4,4 @@ parameters:
     database_name: symfony
     database_user: symfony
     database_password: symfony
+    locale: fr
