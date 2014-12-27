@@ -33,6 +33,7 @@
     "require-dev": {
         "chill-project/main": "dev-master@dev",
         "chill-project/custom-fields": "dev-master@dev",
-        "chill-project/person": "dev-master@dev"
+        "chill-project/person": "dev-master@dev",
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     }
 }
