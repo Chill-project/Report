@@ -39,16 +39,42 @@ class LoadCustomFieldsGroup extends AbstractFixture implements OrderedFixtureInt
     public function load(ObjectManager $manager)
     {
         echo "loading customFieldsGroup...\n";
+        
+        $report = $this->createReport($manager, array('fr' => 'Situation de logement'));
+        $this->addReference('cf_group_report_logement', $report);
+        
+        $report = $this->createReport($manager, array('fr' => 'Alphabétisme'));
+        $this->addReference('cf_group_report_education', $report);
 
         for($i=0; $i <= 3; $i++) {
-            echo "CFGroup Report {$i}\n";
-            $cFGroup = (new CustomFieldsGroup())
-                ->setName(array('fr' => 'CFGroup Report ' . $i))
-                ->setEntity('Chill\ReportBundle\Entity\Report');
+            
+            $report = $this->createReport($manager, array('fr' => 'ZZ Rapport aléatoire '.$i));
 
-            $manager->persist($cFGroup);
-            $this->addReference('cf_group_report_'.$i, $cFGroup);
+            $this->addReference('cf_group_report_'.$i, $report);
         }
+        
+        
+        
         $manager->flush();
+    }
+    
+    /**
+     * create a report and persist in the db
+     * 
+     * @param ObjectManager $manager
+     * @param array $name
+     * @return CustomFieldsGroup
+     */
+    private function createReport(ObjectManager $manager, array $name)
+    {
+        echo $name['fr']." \n";
+        
+        $cFGroup = (new CustomFieldsGroup())
+            ->setName($name)
+            ->setEntity('Chill\ReportBundle\Entity\Report');
+
+        $manager->persist($cFGroup);
+        
+        return $cFGroup;
     }
 }

@@ -92,6 +92,131 @@ class LoadCustomField extends AbstractFixture implements OrderedFixtureInterface
 
             $manager->persist($customField);
         }
+        
+        $this->createExpectedFields($manager);
+        
         $manager->flush();
+    }
+    
+    private function createExpectedFields(ObjectManager $manager)
+    {
+        //report logement
+        $reportLogement = $this->getReference('cf_group_report_logement');
+        
+        $houseTitle = (new CustomField())
+                ->setSlug('house_title')
+                ->setType('title')
+                ->setOptions(array('type' => 'title'))
+                ->setName(array('fr' => 'Situation de logement'))
+                ->setOrdering(10)
+                ->setCustomFieldsGroup($reportLogement)
+                ;
+        $manager->persist($houseTitle);
+        
+        $hasLogement = (new CustomField())
+                ->setSlug('has_logement')
+                ->setName(array('fr' => 'Logement actuel'))
+                ->setType('choice')
+                ->setOptions(array(
+                    'multiple' => FALSE,
+                    'expanded' => TRUE,
+                    'other' => TRUE,
+                    'choices' => [
+                        array(
+                            'name' => ['fr' => 'Locataire d\' un logement'],
+                            'slug' => 'rent_house',
+                            'active' => true
+                        ),
+                        array(
+                            'name' => ['fr' => 'Propriétaire d\' un logement'],
+                            'slug' => 'own_house',
+                            'active' => true
+                        ),
+                        array(
+                            'name' => ['fr' => 'Par-ci, par là (amis, famille, ...)'],
+                            'slug' => 'here-and-there',
+                            'active' => true
+                        ),
+                        array(
+                            'name' => ['fr' => 'A la rue'],
+                            'slug' => 'street',
+                            'active' => true
+                        )
+                    ]
+                    
+                ))
+                ->setOrdering(20)
+                ->setCustomFieldsGroup($reportLogement)
+                ;
+        $manager->persist($hasLogement);
+        
+        $descriptionLogement = (new CustomField())
+                ->setSlug('house-desc')
+                ->setName(array('fr' => 'Plaintes éventuelles sur le logement'))
+                ->setType('text')
+                ->setOptions(['maxLength' => 1500])
+                ->setOrdering(30)
+                ->setCustomFieldsGroup($reportLogement)
+                ;
+        $manager->persist($descriptionLogement);
+        
+        
+        //report problems
+        $reportEducation = $this->getReference('cf_group_report_education');
+        
+        $title = (new CustomField())
+                ->setSlug('title')
+                ->setType('title')
+                ->setOptions(array('type' => 'title'))
+                ->setName(array('fr' => 'Éducation'))
+                ->setOrdering(10)
+                ->setCustomFieldsGroup($reportEducation)
+                ;
+        $manager->persist($title);
+        
+        $educationLevel = (new CustomField())
+                ->setSlug('level')
+                ->setName(array('fr' => 'Niveau du plus haut diplôme'))
+                ->setType('choice')
+                ->setOptions(array(
+                    'multiple' => FALSE,
+                    'expanded' => FALSE,
+                    'other' => FALSE,
+                    'choices' => [
+                        array(
+                            'name' => ['fr' => 'Supérieur'],
+                            'slug' => 'superieur',
+                            'active' => true
+                        ),
+                        array(
+                            'name' => ['fr' => 'Secondaire supérieur (CESS)'],
+                            'slug' => 'cess',
+                            'active' => true
+                        ),
+                        array(
+                            'name' => ['fr' => 'Secondaire deuxième degré ou inférieur (C2D)'],
+                            'slug' => 'c2d',
+                            'active' => true
+                        ),
+                        array(
+                            'name' => ['fr' => 'Primaire'],
+                            'slug' => 'low',
+                            'active' => true
+                        ),
+                        array(
+                            'name' => ['fr' => 'Aucun diplome'],
+                            'slug' => 'no',
+                            'active' => true
+                        )
+                    ]
+                    
+                ))
+                ->setOrdering(20)
+                ->setCustomFieldsGroup($reportEducation)
+                ;
+        $manager->persist($educationLevel);
+        
+        
+        
     }
 }
