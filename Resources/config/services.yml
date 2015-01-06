@@ -7,3 +7,12 @@ services:
         class: Chill\ReportBundle\Routing\RoutesLoader
         tags:
             - { name: routing.loader }
+            
+    chill.report.search:
+        class: Chill\ReportBundle\Search\ReportSearch
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: chill.search, alias: 'report' }

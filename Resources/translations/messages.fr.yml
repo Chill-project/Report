@@ -27,3 +27,9 @@ User: Utilisateur
 'This is not the report of the person.': "La personne et le rapport sélectionnés ne sont pas associés"
 
 'You are going to leave a page with unsubmitted data. Are you sure you want to leave ?': "Vous allez quitter la page alors que des données n'ont pas été enregistrées. Êtes vous sûr de vouloir partir ?"
+
+#search
+'You may not set a date argument and a date in default': Vous avez introduit deux dates, l'une avec l'argument date et l'autre en zone de recherche par défaut. Merci d'indiquer l'un ou l'autre
+'You must provide either a date:YYYY-mm-dd argument or a YYYY-mm-dd default search': Merci d'indiquer soit un argument date:YYYY-mm-dd, soit une date dans la recherche par défaut.
+'Reports search results': Recherche dans les rapports
+'%total% reports matching the search "%pattern%"': '{0} Aucun rapport ne correspond à la recherche "%pattern%" | {1} Un rapport correspond à la recherche "%pattern%" | ]1,Inf]%total% rapports correspondent à la recherche "%pattern%"'
