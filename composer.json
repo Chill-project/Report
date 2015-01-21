@@ -22,18 +22,15 @@
         "symfony/framework-bundle": "2.5.*",
         "symfony/yaml": "2.5.*",
         "symfony/symfony": "2.5.*",
-        "doctrine/dbal": "2.5.*@dev",
-        "doctrine/orm": "2.5.*@dev",
-        "doctrine/common": "2.4.*@dev",
-        "doctrine/doctrine-bundle": "~1.2@dev",
-        "chill-project/main": "dev-master",
-        "chill-project/custom-fields": "dev-master",
-        "chill-project/person": "dev-master"
-    },
-    "require-dev": {
+        "doctrine/dbal": "~2.5",
+        "doctrine/orm": "~2.4",
+        "doctrine/common": "~2.4",
+        "doctrine/doctrine-bundle": "~1.2",
         "chill-project/main": "dev-master@dev",
         "chill-project/custom-fields": "dev-master@dev",
-        "chill-project/person": "dev-master@dev",
+        "chill-project/person": "dev-master@dev"
+    },
+    "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",
         "fzaninotto/faker": "~1"
     }
