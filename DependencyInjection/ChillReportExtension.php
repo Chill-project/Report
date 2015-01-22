@@ -30,6 +30,8 @@ class ChillReportExtension extends Extension implements PrependExtensionInterfac
 
     /**
      * Declare the entity Report, as a customizable entity (can add custom fields)
+     * 
+     * @param ContainerBuilder $container
      */
     public function declareReportAsCustomizable(ContainerBuilder $container)
     {
@@ -46,9 +48,31 @@ class ChillReportExtension extends Extension implements PrependExtensionInterfac
             )
         );
     }
+    
+    /**
+     * declare routes from report bundle
+     * 
+     * @param ContainerBuilder $container
+     */
+    private function declareRouting(ContainerBuilder $container)
+    {
+         $container->prependExtensionConfig('chill_main', array(
+           'routing' => array(
+              'resources' => array(
+                 '@ChillReportBundle/Resources/config/routing.yml'
+              )
+           )
+        ));
+    }
 
+    /**
+     * {@inheritdoc}
+     * 
+     * @param ContainerBuilder $container
+     */
     public function prepend(ContainerBuilder $container)
     {
         $this->declareReportAsCustomizable($container);
+        $this->declareRouting($container);
     }
 }

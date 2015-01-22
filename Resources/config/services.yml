@@ -3,10 +3,6 @@ services:
 #        class: Chill\ReportBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
 services:
-    chill.report.routing_loader:
-        class: Chill\ReportBundle\Routing\RoutesLoader
-        tags:
-            - { name: routing.loader }
             
     chill.report.search:
         class: Chill\ReportBundle\Search\ReportSearch
