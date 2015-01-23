@@ -33,7 +33,7 @@
             {% for report in reports %}
             <tr>
                 <td>{{ report.person }}</td>
-                <td>{% if report.date %}{{ report.date|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if report.date %}{{ report.date|localizeddate('long', 'none') }}{% endif %}</td>
                 <td>{{ report.cFGroup.getName|localize_translatable_string  }}</td>
                 <!-- <td>{{ report.scope }}</td> -->
                 <td><a href="{{ path('report_view', { 'person_id': report.person.id, 'report_id': report.id }) }}">{{ 'View the report' | trans }}</a></td>

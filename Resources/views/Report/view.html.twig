@@ -33,7 +33,7 @@
         <!-- <dt class="inline">{{ 'Scope'|trans }}</dt>
         <dd>{{ entity.scope }}</dd> -->
         <dt class="inline">{{ 'Date'|trans }}</dt>
-        <dd>{{ entity.date|date('d-m-Y') }}</dd>
+        <dd>{{ entity.date|localizeddate('long', 'none') }}</dd>
         <dt class="inline">{{ 'User'|trans }}</dt>
         <dd>{{ entity.user }}</dd>
         <dt class="inline">{{ 'Report type'|trans }}</dt>
