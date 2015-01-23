@@ -1,11 +1,3 @@
-chill_person:
+chill_routes:
     resource: .
-    type: chill_routes_person
-    
-#load route for reports
-chill_report:
-    resource: .
-    type: chill_routes_report
-    
-chill_main:
-    resource: "@ChillMainBundle/Resources/config/routing.yml"
+    type: chill_routes
