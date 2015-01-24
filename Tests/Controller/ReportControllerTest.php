@@ -152,19 +152,7 @@ class ReportControllerTest extends WebTestCase
         
         $this->isFormAsExpected($addForm);
         
-        $c = static::$client->submit($addForm);
-
-        $this->assertTrue(static::$client->getResponse()->isRedirect(),
-              "The next page is a redirection to the new report's view page");
-        static::$client->followRedirect();
-        
-        $this->assertRegExp("|/fr/person/".static::$person->getId()."/report/[0-9]*/view$|",
-              static::$client->getHistory()->current()->getUri(),
-              "The next page is a redirection to the new report's view page");
-        
         return $addForm;
-        
-        
     }
     
     
@@ -202,12 +190,171 @@ class ReportControllerTest extends WebTestCase
     }
     
     /**
+     * fill the form with correct data
+     * 
+     * @param Form $form
+     */
+    private function fillCorrectForm(Form $form)
+    {
+        $form->get('chill_reportbundle_report[date]')->setValue(
+              (new \DateTime())->format('d-m-Y'));
+        //get the first option values
+        $form->get('chill_reportbundle_report[user]')->setValue(
+              $form->get('chill_reportbundle_report[user]')
+              ->availableOptionValues()[0]);
+        
+        return $form;
+    }
+    
+    /**
+     * Test that setting a Null date redirect to an error page
      * 
      * @param Form $form
      * @depends testNewReportPage
      */
     public function testNullDate(Form $form)
     {
-        $this->assertTrue(true);
+        $filledForm = $this->fillCorrectForm($form);
+        $filledForm->get('chill_reportbundle_report[date]')->setValue('');
+        
+        $crawler = static::$client->submit($filledForm);
+        
+        $this->assertFalse(static::$client->getResponse()->isRedirect());
+        $this->assertGreaterThan(0, $crawler->filter('.error')->count());
+    }
+    
+    /**
+     * Test that setting a Null date redirect to an error page
+     * 
+     * @param Form $form
+     * @depends testNewReportPage
+     */
+    public function testInvalidDate(Form $form)
+    {
+        $filledForm = $this->fillCorrectForm($form);
+        $filledForm->get('chill_reportbundle_report[date]')->setValue('invalid date value');
+        
+        $crawler = static::$client->submit($filledForm);
+        
+        $this->assertFalse(static::$client->getResponse()->isRedirect());
+        $this->assertGreaterThan(0, $crawler->filter('.error')->count());
+    }
+    
+    /**
+     * Test that a incorrect value in user will show an error page
+     * 
+     * @depends testNewReportPage
+     * @param Form $form
+     */
+    public function testInvalidUser(Form $form)
+    {
+        $filledForm = $this->fillCorrectForm($form);
+        $select = $filledForm->get('chill_reportbundle_report[user]')
+              ->disableValidation()
+              ->setValue(-1);
+        
+        $crawler = static::$client->submit($filledForm);
+        
+        $this->assertFalse(static::$client->getResponse()->isRedirect());
+        $this->assertGreaterThan(0, $crawler->filter('.error')->count());
+    }
+    
+    /**
+     * Test the creation of a report
+     * 
+     * @depends testNewReportPage
+     * @param Form $form
+     */
+    public function testValidCreate(Form $addForm)
+    {
+        $filledForm = $this->fillCorrectForm($addForm);
+        $c = static::$client->submit($filledForm);
+
+        $this->assertTrue(static::$client->getResponse()->isRedirect(),
+              "The next page is a redirection to the new report's view page");
+        static::$client->followRedirect();
+        
+        $this->assertRegExp("|/fr/person/".static::$person->getId()."/report/[0-9]*/view$|",
+              static::$client->getHistory()->current()->getUri(),
+              "The next page is a redirection to the new report's view page");
+        
+        $matches = array();
+        preg_match('|/report/([0-9]*)/view$|', 
+              static::$client->getHistory()->current()->getUri(), $matches);
+
+        return $matches[1];
+    }
+    
+
+    /**
+     * @depends testValidCreate
+     * @param int $reportId
+     */
+    public function testList($reportId)
+    {
+        $crawler = static::$client->request('GET', sprintf('/fr/person/%s/report/list',
+              static::$person->getId()));
+        
+        $this->assertTrue(static::$client->getResponse()->isSuccessful());
+        
+        $linkSee = $crawler->selectLink('Voir le rapport')->links();
+        $this->assertGreaterThan(0, count($linkSee));
+        $this->assertRegExp(sprintf('|/fr/person/%s/report/[0-9]*/view$|', 
+              static::$person->getId(), $reportId), $linkSee[0]->getUri());
+        
+        $linkUpdate = $crawler->selectLink('Mettre à jour le rapport')->links();
+        $this->assertGreaterThan(0, count($linkUpdate));
+        $this->assertRegExp(sprintf('|/fr/person/%s/report/[0-9]*/edit$|',
+              static::$person->getId(), $reportId), $linkUpdate[0]->getUri());
+        
+    }
+    
+    /**
+     * Test the view of a report
+     * 
+     * @depends testValidCreate
+     * @param int $reportId
+     */
+    public function testView($reportId)
+    {
+        static::$client->request('GET', 
+              sprintf('/fr/person/%s/report/%s/view', static::$person->getId(), $reportId));
+        
+        $this->assertTrue(static::$client->getResponse()->isSuccessful(),
+              'the page is shown');
+    }
+    
+    /**
+     * test the update form
+     * 
+     * @depends testValidCreate
+     * @param int $reportId
+     */
+    public function testUpdate($reportId)
+    {
+        $crawler = static::$client->request('GET',
+              sprintf('/fr/person/%s/report/%s/edit', static::$person->getId(), $reportId));
+        
+        $this->assertTrue(static::$client->getResponse()->isSuccessful());
+        
+        $form = $crawler
+                ->selectButton('Enregistrer le rapport')
+                ->form();
+        
+        $form->get('chill_reportbundle_report[date]')->setValue(
+              (new \DateTime('yesterday'))->format('d-m-Y'));
+        
+        static::$client->submit($form);
+        
+        $this->assertTrue(static::$client->getResponse()->isRedirect(
+              sprintf('/fr/person/%s/report/%s/view', 
+                    static::$person->getId(), $reportId)));
+
+        $this->assertEquals(new \DateTime('yesterday'), static::$kernel->getContainer()
+              ->get('doctrine.orm.entity_manager')
+              ->getRepository('ChillReportBundle:Report')
+              ->find($reportId)
+              ->getDate());
+        
     }
 }

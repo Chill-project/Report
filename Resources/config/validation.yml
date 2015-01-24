@@ -1,0 +1,5 @@
+Chill\ReportBundle\Entity\Report:
+    properties:
+        date:
+            - NotNull: ~
+            - Date: ~
