@@ -17,7 +17,7 @@ before_script:
 - psql -c 'create database test0;' -U postgres
 - psql -d test0 -c 'CREATE EXTENSION unaccent;' -U postgres
 - php Tests/Fixtures/App/app/console --env=test cache:warmup
-- php Tests/Fixtures/App/console assets:install Tests/Fixtures/App/web
+- php Tests/Fixtures/App/app/console assets:install Tests/Fixtures/App/web
 - php Tests/Fixtures/App/app/console doctrine:migrations:migrate --no-interaction
 - php Tests/Fixtures/App/app/console doctrine:fixtures:load --env=test --no-interaction
 script: phpunit --coverage-text
