@@ -33,6 +33,6 @@
 
 {% block js %}
 <script type="text/javascript">
-    chill.protectUnsavedDataForFrom('form[name="{{ edit_form.vars.form.vars.name }}"]', '{{ "You are going to leave a page with unsubmitted data. Are you sure you want to leave ?"|trans }}');
+    chill.displayAlertWhenLeavingModifiedForm('form[name="{{ edit_form.vars.form.vars.name }}"]', '{{ "You are going to leave a page with unsubmitted data. Are you sure you want to leave ?"|trans }}');
 </script>
 {% endblock %}
