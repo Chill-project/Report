@@ -1,2 +1,4 @@
 /vendor/
 composer.lock
+Tests/Fixtures/App/app/config/parameters.yml
+*~

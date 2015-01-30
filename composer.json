@@ -28,10 +28,24 @@
         "doctrine/doctrine-bundle": "~1.2",
         "chill-project/main": "dev-master@dev",
         "chill-project/custom-fields": "dev-master@dev",
-        "chill-project/person": "dev-master@dev"
+        "chill-project/person": "dev-master@dev",
+        "champs-libres/composer-bundle-migration": "~1.0",
+        "doctrine/doctrine-migrations-bundle": "dev-master@dev",
+        "doctrine/migrations": "~1.0@dev"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",
         "fzaninotto/faker": "~1"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "ComposerBundleMigration\\Composer\\Migrations::synchronizeMigrations"
+        ],
+        "post-update-cmd": [
+            "ComposerBundleMigration\\Composer\\Migrations::synchronizeMigrations"
+        ]
+    },
+    "extra": {
+        "app-migrations-dir": "Tests/Fixtures/App/app/DoctrineMigrations"
     }
 }

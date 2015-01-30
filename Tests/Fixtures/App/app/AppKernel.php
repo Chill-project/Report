@@ -2,7 +2,6 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
 
 class AppKernel extends Kernel
 {
@@ -18,7 +17,8 @@ class AppKernel extends Kernel
             new Chill\PersonBundle\ChillPersonBundle(),
             new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
-            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle()
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle()
         );   
     }
 

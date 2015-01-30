@@ -1,7 +1,0 @@
-parameters:
-    database_host: 127.0.0.1
-    database_port: 5435
-    database_name: chill
-    database_user: chill
-    database_password: chill
-    locale: fr
