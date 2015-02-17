@@ -1,0 +1,23 @@
+"{{ 'Person'|trans }}",{#
+#}"{{ 'Date'|trans }}",{#
+#}"{{ 'User'|trans }}",{#
+#}"{{ 'Report type'|trans }}",{#
+#}{% for customField in cf_group.customFields %}{#
+    #}"{{ chill_custom_field_label(customField) }}"{% if not loop.last %},{% endif %}{#
+#}{% endfor %}
+
+{% for report in reports %}{#
+    #}"{{ report.person }}",{#
+    #}"{{ report.date|localizeddate('long', 'none') }}",{#
+    #}"{{ report.user }}",{#
+    #}"{{ report.cFGroup.getName(app.request.locale) }}",{#
+    #}{% for customField in report.cFGroup.customFields %}{#
+        #}{% if customField.type == 'title' %}{#
+            #}""{#
+        #}{% else %}{#
+            #}"{{ chill_custom_field_widget(report.cFData , customField, 'csv') }}"{#
+        #}{% endif %}{#
+        #}{% if not loop.last %},{% endif %}{#
+    #}{% endfor %}
+    
+{% endfor %}

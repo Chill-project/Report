@@ -35,3 +35,17 @@ report_update:
     path:     /{_locale}/person/{person_id}/report/{report_id}/update
     defaults: { _controller: "ChillReportBundle:Report:update" }
     requirements: { _method: post|put }
+
+report_export_list:
+    path: /{_locale}/export/report/cfgroup/{cf_group_id}
+    defaults: { _controller: "ChillReportBundle:Report:export" }
+
+
+report_export_select_type:
+    pattern: /{_locale}/export/report/select/type
+    defaults: {_controller: "ChillReportBundle:Report:selectReportTypeForExport" }
+    options:
+        menus:
+            export:
+                order: 100
+                label: Export reports

@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #}
-{% extends "ChillPersonBundle::layout.html.twig"  %}
+{% extends "ChillMainBundle::Export/layout.html.twig"  %}
 
-{% set activeRouteKey = 'report_select_type' %}
+{% set activeRouteKey = 'report_export_list' %}
 
-{% block title %}{{ 'Add a report'|trans() }}{% endblock title %}
+{% block title %}{{ 'Reports export'|trans() }}{% endblock title %}
 
-{% block personcontent %}
+{% block export_content %}
 
 {{ form_start(form) }}
     {{ form_widget(form.cFGroup) }}
     <button class="sc-button green" type="submit">
-        <i class="fa fa-plus"></i>
-        {{ 'Create a new report'|trans }}
+        <i class="fa fa-upload"></i>
+        {{ 'Export this kind of reports'|trans }}
     </button>
 {{ form_end(form) }}
  

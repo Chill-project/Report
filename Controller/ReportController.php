@@ -33,10 +33,12 @@ use Chill\ReportBundle\Form\ReportType;
  */
 class ReportController extends Controller
 {
-
     /**
-     * Lists all Report entities.
+     * List all the report entities for a given person.
      *
+     * @param integer $person_id The id of the person.
+     * @param Request $request The request
+     * @return Response The web page.
      */
     public function listAction($person_id, Request $request)
     {
@@ -52,9 +54,12 @@ class ReportController extends Controller
         ));
     }
 
-
     /**
-     * Select the type of the Report
+     * Display a form for selecting which type of report to add for a given person
+     *
+     * @param integer $person_id The id of the person.
+     * @param Request $request The request
+     * @return Response The web page.
      */
     public function selectReportTypeAction($person_id, Request $request)
     {
@@ -68,18 +73,14 @@ class ReportController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
-
         $cFGroups = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
             ->findByEntity('Chill\ReportBundle\Entity\Report');
-
 
         if(count($cFGroups) === 1 ){
             return $this->redirect(
                 $this->generateUrl('report_new', 
                     array('person_id' => $person_id, 'cf_group_id' => $cFGroups[0]->getId())));
         }
-
 
         $cFGroupsChoice = array();
 
@@ -97,6 +98,8 @@ class ReportController extends Controller
             ))
             ->getForm();
 
+        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
+
         return $this->render('ChillReportBundle:Report:select_report_type.html.twig', array(
             'form'     => $form->createView(),
             'person'   => $person
@@ -104,8 +107,87 @@ class ReportController extends Controller
     }
 
     /**
-     * Displays a form to create a new Report entity.
+     * Display a form for selecting which type of report to export 
+     * (a csv file with all the report of this type)
      *
+     * @param Request $request The request
+     * @return Response The web page.
+     */
+    public function selectReportTypeForExportAction(Request $request)
+    {
+        $cFGroupId = $request->query->get('cFGroup');
+
+        if($cFGroupId) {
+            return $this->redirect(
+                $this->generateUrl('report_export_list', 
+                    array('cf_group_id' => $cFGroupId)));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $cFGroups = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
+            ->findByEntity('Chill\ReportBundle\Entity\Report');
+
+        if(count($cFGroups) === 1 ){
+            return $this->redirect(
+                $this->generateUrl('report_export_list',
+                    array('cf_group_id' => $cFGroups[0]->getId())));
+        }
+
+        $cFGroupsChoice = array();
+
+        foreach ($cFGroups as $cFGroup) {
+            $cFGroupsChoice[$cFGroup->getId()] = $cFGroup->getName($request->getLocale());
+        }
+
+        $form = $this->get('form.factory')
+            ->createNamedBuilder(null, 'form', null, array(
+                'method' => 'GET',
+                'csrf_protection' => false
+            ))
+            ->add('cFGroup', 'choice', array(
+                'choices' => $cFGroupsChoice
+            ))
+            ->getForm();
+
+        return $this->render('ChillReportBundle:Report:select_report_type_for_export.html.twig', array(
+            'form'     => $form->createView(),
+            'layout_name' => "ChillMainBundle::Export/layout.html.twig"
+        ));
+    }
+
+    /**
+     * Return a csv file with all the reports of a given type
+     *
+     * @param integer $cf_group_id The id of the report type to export
+     * @param Request $request The request
+     * @return A csv file with all the reports of the selected type 
+     */
+    public function exportAction($cf_group_id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cf_group_id);
+        $reports = $em->getRepository('ChillReportBundle:Report')->findByCFGroup($cFGroup);
+
+
+        $response = $this->render('ChillReportBundle:Report:export.csv.twig', array(
+            'reports' => $reports,
+            'cf_group' => $cFGroup
+        ));
+
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+        return $response;
+    }
+
+    /**
+     * Display a form for creating a new report for a given person and of a given type
+     *
+     * @param integer $person_id The id of the person.
+     * @param integer $cf_group_id The id of the report type.
+     * @param Request $request The request
+     * @return Response The web page.
      */
     public function newAction($person_id, $cf_group_id, Request $request)
     {
@@ -130,8 +212,12 @@ class ReportController extends Controller
     }
 
     /**
-     * Creates a new Report entity.
+     * Create a new report for a given person and of a given type
      *
+     * @param integer $person_id The id of the person.
+     * @param integer $cf_group_id The id of the report type.
+     * @param Request $request The request containing the form data (from the newAction)
+     * @return Response The web page.
      */
     public function createAction($person_id, $cf_group_id, Request $request)
     {
@@ -183,6 +269,8 @@ class ReportController extends Controller
      * Creates a form to create a Report entity.
      *
      * @param Report $entity The entity
+     * @param integer $person_id The id of the person.
+     * @param integer $cf_group_id The id of the report type.
      *
      * @return \Symfony\Component\Form\Form The form
      */
@@ -200,8 +288,11 @@ class ReportController extends Controller
     }
 
     /**
-     * Finds and displays a Report entity.
+     * Find and display a report.
      *
+     * @param integer $report_id The id of the report.
+     * @param integer $person_id The id of the person.
+     * @return Response The web page.
      */
     public function viewAction($report_id, $person_id)
     {
@@ -223,8 +314,11 @@ class ReportController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Report entity.
+     * Display a form to edit an existing Report entity.
      *
+     * @param integer $person_id The id of the person.
+     * @param integer $report_id The id of the report.
+     * @return Response The web page.
      */
     public function editAction($person_id, $report_id, Request $request)
     {
@@ -255,8 +349,8 @@ class ReportController extends Controller
     /**
      * Creates a form to edit a Report entity.
      *
-     * @param Report $entity The entity
-     *
+     * @param Report $entity The report to edit.
+     * @param integer $person_id The id of the person.
      * @return \Symfony\Component\Form\Form The form
      */
     private function createEditForm(Report $entity, $person_id)
@@ -273,8 +367,11 @@ class ReportController extends Controller
     }
 
     /**
-     * Edits an existing Report entity.
+     * Web page for editing an existing report.
      *
+     * @param integer $person_id The id of the person.
+     * @param integer $report_id The id of the report.
+     * @return Response The web page.
      */
     public function updateAction($person_id, $report_id, Request $request)
     {
