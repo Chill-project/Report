@@ -1,5 +1,6 @@
 "{{ 'Report id'|trans }}",{#
 #}"{{ 'Person'|trans }}",{#
+#}"{{ 'Person id'|trans }}",{#
 #}"{{ 'Date'|trans }}",{#
 #}"{{ 'User'|trans }}",{#
 #}"{{ 'Report type'|trans }}",{#
@@ -10,6 +11,7 @@
 {% for report in reports %}{#
     #}{{ report.id }},{#
     #}"{{ report.person }}",{#
+    #}"{{ report.person.id }}",{#
     #}"{{ report.date|localizeddate('short', 'none') }}",{#
     #}"{{ report.user }}",{#
     #}"{{ report.cFGroup.getName(app.request.locale) }}",{#
