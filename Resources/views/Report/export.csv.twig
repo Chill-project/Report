@@ -10,11 +10,11 @@
 
 {% for report in reports %}{#
     #}{{ report.id }},{#
-    #}"{{ report.person }}",{#
-    #}"{{ report.person.id }}",{#
+    #}"{{ report.person|csv_cell }}",{#
+    #}"{{ report.person.id|csv_cell }}",{#
     #}"{{ report.date|localizeddate('short', 'none') }}",{#
-    #}"{{ report.user }}",{#
-    #}"{{ report.cFGroup.getName(app.request.locale) }}",{#
+    #}"{{ report.user|csv_cell }}",{#
+    #}"{{ report.cFGroup.getName(app.request.locale)|csv_cell }}",{#
     #}{% for customField in report.cFGroup.customFields %}{#
         #}{% if customField.type == 'title' %}{#
             #}""{#
