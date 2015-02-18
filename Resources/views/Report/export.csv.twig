@@ -1,4 +1,5 @@
-"{{ 'Person'|trans }}",{#
+"{{ 'Person id'|trans }}",{#
+#}"{{ 'Person'|trans }}",{#
 #}"{{ 'Date'|trans }}",{#
 #}"{{ 'User'|trans }}",{#
 #}"{{ 'Report type'|trans }}",{#
@@ -7,8 +8,9 @@
 #}{% endfor %}
 
 {% for report in reports %}{#
+    #}{{ report.id }},{#
     #}"{{ report.person }}",{#
-    #}"{{ report.date|localizeddate('long', 'none') }}",{#
+    #}"{{ report.date|localizeddate('short', 'none') }}",{#
     #}"{{ report.user }}",{#
     #}"{{ report.cFGroup.getName(app.request.locale) }}",{#
     #}{% for customField in report.cFGroup.customFields %}{#
