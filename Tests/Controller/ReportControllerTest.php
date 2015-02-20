@@ -2,12 +2,14 @@
 
 /*
  * Chill is a software for social workers
- * Copyright (C) 2014 Julien Fastré <julien.fastre@champs-libres.coop>
+ *
+ * Copyright (C) 2014-2015, Champs Libres Cooperative SCRLFS, 
+ * <http://www.champs-libres.coop>, <info@champs-libres.coop>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +24,8 @@ namespace Chill\ReportBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\DomCrawler\Link;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Test the life cycles of controllers, according to 
@@ -42,7 +46,7 @@ class ReportControllerTest extends WebTestCase
     
     /**
      *
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var \SClientymfony\Component\BrowserKit\
      */
     private static $client;
     
@@ -68,11 +72,11 @@ class ReportControllerTest extends WebTestCase
                   ->get('doctrine.orm.entity_manager')
                   ->getRepository('ChillMainBundle:User')
                   ->findOneBy(array('username' => "center a_social"));
-        
     }
     
     /**
-     * 
+     * Set up the browser to be at a random person general page (/fr/person/%d/general),
+     * check if there is a menu link for adding a new report and return this link (as producer)
      * 
      * We assume that : 
      * - we are on a "person" page
@@ -81,7 +85,6 @@ class ReportControllerTest extends WebTestCase
      */
     public function testMenu()
     {
-        
         $crawlerPersonPage = static::$client->request('GET', sprintf('/fr/person/%d/general', 
               static::$person->getId()));
         
@@ -106,9 +109,8 @@ class ReportControllerTest extends WebTestCase
      * @return type
      * @depends testMenu
      */
-    public function testChooseReportModelPage(\Symfony\Component\DomCrawler\Link $link) 
-    {
-        
+    public function testChooseReportModelPage(Link $link) 
+    {   
         // When I click on "adda report" link in menu
         $crawlerAddAReportPage = static::$client->click($link);
         
@@ -130,8 +132,6 @@ class ReportControllerTest extends WebTestCase
         
         $this->assertTrue(static::$client->getResponse()->isRedirect());
         return static::$client->followRedirect();
-        
-        
     }
     
     /**
@@ -140,7 +140,7 @@ class ReportControllerTest extends WebTestCase
      * @return type
      * @depends testChooseReportModelPage
      */
-    public function testNewReportPage(\Symfony\Component\DomCrawler\Crawler $crawlerNewReportPage)
+    public function testNewReportPage(Crawler $crawlerNewReportPage)
     {   
         
         $addForm = $crawlerNewReportPage
@@ -355,6 +355,97 @@ class ReportControllerTest extends WebTestCase
               ->getRepository('ChillReportBundle:Report')
               ->find($reportId)
               ->getDate());
+    }
+
+    /**
+     * Test that in the general export page there is an Export reports link
+     * that leads to export/report/select/type
+     * 
+     * @return \Symfony\Component\DomCrawler\Link The link to the the
+     * form use for selecting which type of report to export
+     */
+    public function testLinkToTheExportReport()
+    {
+        $crawlerReportExportPage = static::$client->request('GET', '/fr/export');
         
+        if (! static::$client->getResponse()->isSuccessful()) {
+            var_dump($crawlerReportExportPage->html());
+            throw new \RuntimeException('The get request at export page failed');
+        }
+        
+        $link = $crawlerReportExportPage->selectLink("Export reports")->link();
+        $this->assertInstanceOf('Symfony\Component\DomCrawler\Link', $link, 
+              "There is a \"export reports\" link in the export menu");
+
+        $this->assertContains("export/report/select/type", $link->getUri(), 
+              "The \"export reports\" link in the export menu points to export/report/select/type");
+        
+        return $link;
+    }
+
+    /**
+     * Test the export ReportAction :
+     * - follow the given link ( export/report/select/type )
+     * - choose randomly a type of report (CustomFieldsGroup)
+     * - submit the form
+     * - check if a csv file is well receiv
+     * - check if the number of row of the csv file is as expected (number of report of this type + 1)
+     *
+     * @depends testLinkToTheExportReport
+     */
+    public function testExportAction(Link $link) 
+    {
+        $crawlerExportReportPage = static::$client->click($link);
+
+        $form = $crawlerExportReportPage->selectButton("Export this kind of reports")->form();
+        
+        $this->assertInstanceOf('Symfony\Component\DomCrawler\Form', $form,
+              'I can see a form with a button "Export this kind of reports" ');
+        
+        $this->assertGreaterThan(1, count($form->get(self::REPORT_NAME_FIELD)
+                  ->availableOptionValues()),
+                "I can choose between report types");
+
+        $possibleOptionsValue = $form->get(self::REPORT_NAME_FIELD)
+              ->availableOptionValues();
+
+
+        $cfGroupId = $possibleOptionsValue[array_rand($possibleOptionsValue)];
+
+        $form->get(self::REPORT_NAME_FIELD)->setValue($cfGroupId);
+        
+        static::$client->submit($form);
+        
+        $this->assertTrue(static::$client->getResponse()->isRedirect());
+        
+        static::$client->followRedirect();
+
+        // TO DO CREATE A NEW FUNCTION
+
+        $response = static::$client->getResponse();
+
+        $this->assertTrue(
+            strpos($response->headers->get('Content-Type'),'text/csv') !== false,
+            'The csv file is well received');
+
+        echo gettype(static::$kernel->getContainer()
+                  ->get('doctrine.orm.entity_manager'));
+        
+        $content = $response->getContent();
+        $rows = (explode("\n", $content));
+
+        $em = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
+
+        $cfGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cfGroupId);
+        $reports = $em->getRepository('ChillReportBundle:Report')->findByCFGroup($cfGroup);
+
+        if($rows[sizeof($rows) -1] == "") {
+             array_pop($rows);
+        }
+
+        $this->assertTrue(
+            sizeof($rows) == (sizeof($reports) + 1),
+            'The csv file has a number of row equivalent than the number of reports in the db'
+        );
     }
 }
