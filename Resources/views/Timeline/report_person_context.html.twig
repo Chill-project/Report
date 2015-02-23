@@ -1,6 +1,9 @@
-{{ '%user% has filled a %report_label% report on %date%'|trans(
+<div class="report">
+<span class="statement">{{ '%user% has filled a %report_label% report on %date%'|trans(
    { 
      '%user%' : user, 
      '%report_label%': report.CFGroup.name|localize_translatable_string, 
      '%date%' : report.date|localizeddate('long', 'none') }
-) }}
+) }}</span> <span class="links"><a href="{{ path('report_view', 
+{ 'person_id': person.id, 'report_id': report.id} ) }}">{{ 'View the report'|trans }}</a></span>
+</div>
