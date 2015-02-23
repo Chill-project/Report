@@ -1,0 +1,6 @@
+{{ '%user% has filled a %report_label% report on %date%'|trans(
+   { 
+     '%user%' : user, 
+     '%report_label%': report.CFGroup.name|localize_translatable_string, 
+     '%date%' : report.date|localizeddate('long', 'none') }
+) }}
