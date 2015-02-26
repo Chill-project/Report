@@ -33,3 +33,6 @@ User: Utilisateur
 'You must provide either a date:YYYY-mm-dd argument or a YYYY-mm-dd default search': Merci d'indiquer soit un argument date:YYYY-mm-dd, soit une date dans la recherche par défaut.
 'Reports search results': Recherche dans les rapports
 '%total% reports matching the search "%pattern%"': '{0} Aucun rapport ne correspond à la recherche "%pattern%" | {1} Un rapport correspond à la recherche "%pattern%" | ]1,Inf]%total% rapports correspondent à la recherche "%pattern%"'
+
+#timeline
+'%user% has filled a %report_label% report on %date%': %user% a ajouté un rapport '%report_label%' le %date%
