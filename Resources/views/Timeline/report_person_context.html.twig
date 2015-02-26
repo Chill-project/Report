@@ -1,9 +1,23 @@
 <div class="report">
-<span class="statement">{{ '%user% has filled a %report_label% report on %date%'|trans(
-   { 
-     '%user%' : user, 
-     '%report_label%': report.CFGroup.name|localize_translatable_string, 
-     '%date%' : report.date|localizeddate('long', 'none') }
-) }}</span> <span class="links"><a href="{{ path('report_view', 
-{ 'person_id': person.id, 'report_id': report.id} ) }}">{{ 'View the report'|trans }}</a></span>
+    <div class="statement">
+        <span class="statement">{{ '%user% has filled a %report_label% report on %date%'|trans(
+           { 
+             '%user%' : user, 
+             '%report_label%': report.CFGroup.name|localize_translatable_string, 
+             '%date%' : report.date|localizeddate('long', 'none') }
+        ) }}</span> <span class="links"><a href="{{ path('report_view', 
+        { 'person_id': person.id, 'report_id': report.id} ) }}">{{ 'View the report'|trans }}</a></span>
+    </div>
+    {% if custom_fields_in_summary|length > 0 %}
+        <div class="summary">
+            {% for field in custom_fields_in_summary %}
+                {% if field.type == 'title' %}
+                {{ chill_custom_field_widget(report.cFData, field) }}
+            {% else %}
+                <dt>{{ chill_custom_field_label(field) }}</dt>
+                <dd>{{ chill_custom_field_widget(report.cFData, field) }}</dd>
+            {% endif %}
+            {% endfor %}
+        </div>
+     {% endif %}
 </div>

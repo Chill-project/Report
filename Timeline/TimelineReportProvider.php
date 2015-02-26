@@ -88,10 +88,27 @@ class TimelineReportProvider implements TimelineProviderInterface
      */
     public function getEntityTemplate($entity, $context, array $args)
     {
+        $this->checkContext($context);
+        
+        //gather all custom fields which should appears in summary
+        $customFieldsInSummary = array();
+        if (array_key_exists('summary_fields', $entity->getCFGroup()->getOptions())) {
+            
+            foreach ($entity->getCFGroup()->getCustomFields() as $customField) {
+                if (in_array($customField->getSlug(), 
+                      $entity->getCFGroup()->getOptions()['summary_fields'])) {
+                    $customFieldsInSummary[] = $customField;
+                }
+            }
+        }
+
+        
+        
         return array(
            'template' => 'ChillReportBundle:Timeline:report_person_context.html.twig',
            'template_data' => array(
               'report' => $entity,
+              'custom_fields_in_summary' => $customFieldsInSummary,
               'person' => $args['person'],
               'user' => $entity->getUser()
            )

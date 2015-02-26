@@ -73,8 +73,9 @@ class TimelineProviderTest extends WebTestCase
                     ->findOneByUsername('chill b_social'))
               ->setDate(new \DateTime('2015-05-02'))
               ->setPerson($this->person)
-              ->setCFGroup($this->getRandomCustomFieldsGroup())
-              ->setCFData(array());
+              ->setCFGroup($this->getHousingCustomFieldsGroup())
+              ->setCFData(['has_logement' => 'own_house', 
+           'house-desc' => 'blah blah']);
         
         static::$em->persist($this->report);
         
@@ -84,6 +85,9 @@ class TimelineProviderTest extends WebTestCase
         
     }
     
+    /**
+     * Test that a report is shown in timeline
+     */
     public function testTimelineReport()
     {
         $client = static::createClient(array(),
@@ -99,16 +103,46 @@ class TimelineProviderTest extends WebTestCase
               'the page contains the text "a publié un rapport"');
     }
     
+    public function testTimelineReportWithSummaryField()
+    {
+        //load the page
+        $client = static::createClient(array(),
+              MainTestHelper::getAuthenticatedClientOptions()
+              );
+        
+        $crawler = $client->request('GET', '/fr/person/'.$this->person->getId()
+              .'/timeline');
+        
+        //performs tests
+        $this->assertTrue($client->getResponse()->isSuccessful(),
+              'The page timeline is loaded successfully');
+        $this->assertGreaterThan(0, $crawler->filter('.report .summary')
+              ->count(), 
+              'the page contains a .report .summary element');
+        $this->assertContains('blah blah', $crawler->filter('.report .summary')
+              ->text(),
+              'the page contains the text "blah blah"');
+        $this->assertContains('Propriétaire', $crawler->filter('.report .summary')
+              ->text(),
+              'the page contains the mention "Propriétaire"');
+    }
+    
     /**
      * get a random custom fields group
      * 
      * @return \Chill\CustomFieldsBundle\Entity\CustomFieldsGroup
      */
-    private function getRandomCustomFieldsGroup()
+    private function getHousingCustomFieldsGroup()
     {
         $groups = static::$em
               ->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
-              ->findBy(array('entity' => 'Chill\ReportBundle\Entity\Report'));
+              ->findAll();
+        
+        foreach ($groups as $group) {
+            if ($group->getName()['fr'] === 'Situation de logement') {
+                return $group;
+            }
+        }
         
         return $groups[rand(0, count($groups) -1)];
     }
@@ -117,7 +151,7 @@ class TimelineProviderTest extends WebTestCase
     
     public function tearDown()
     {
-        static::$em->remove($this->person);
-        static::$em->remove($this->report);
+        //static::$em->remove($this->person);
+        //static::$em->remove($this->report);
     }
 }
