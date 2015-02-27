@@ -52,10 +52,19 @@ class ReportControllerTest extends WebTestCase
     
     private static $user;
     
+    /**
+     *
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    private static $em;
+
     public static function setUpBeforeClass()
     {
         static::bootKernel();
         
+        static::$em = static::$kernel->getContainer()
+            ->get('doctrine.orm.entity_manager');
+
         //get a random person
         $persons = static::$kernel->getContainer()
               ->get('doctrine.orm.entity_manager')
@@ -111,7 +120,7 @@ class ReportControllerTest extends WebTestCase
      */
     public function testChooseReportModelPage(Link $link) 
     {   
-        // When I click on "adda report" link in menu
+        // When I click on "add a report" link in menu
         $crawlerAddAReportPage = static::$client->click($link);
         
         $form = $crawlerAddAReportPage->selectButton("Créer un nouveau rapport")->form();
@@ -384,16 +393,15 @@ class ReportControllerTest extends WebTestCase
     }
 
     /**
-     * Test the export ReportAction :
+     * Test the export form for selecting the type of report to export :
      * - follow the given link ( export/report/select/type )
      * - choose randomly a type of report (CustomFieldsGroup)
      * - submit the form
-     * - check if a csv file is well receiv
-     * - check if the number of row of the csv file is as expected (number of report of this type + 1)
      *
+     * @return Integer The id of the type of report selected (CFGroup)
      * @depends testLinkToTheExportReport
      */
-    public function testExportAction(Link $link) 
+    public function testFormForExportAction(Link $link)
     {
         $crawlerExportReportPage = static::$client->click($link);
 
@@ -419,32 +427,53 @@ class ReportControllerTest extends WebTestCase
         $this->assertTrue(static::$client->getResponse()->isRedirect());
         
         static::$client->followRedirect();
-
-        // TO DO CREATE A NEW FUNCTION
-
+        
+        return $cfGroupId;
+    }
+    
+    /**
+     * Test the output of the export action :
+     * - check if a csv file is well received
+     * - check if the csv is well formated (if each row has the same number of
+     *      cells)
+     * - check if the number of data rows (not the header) of the csv file is
+     *      as expected (number of report of this type)
+     *
+     * @param Int The id of the type of report selected (CFGroup)
+     * @depends testFormForExportAction
+     */
+    public function testCSVExportAction($cfGroupId)
+    {
         $response = static::$client->getResponse();
 
         $this->assertTrue(
             strpos($response->headers->get('Content-Type'),'text/csv') !== false,
             'The csv file is well received');
-
-        echo gettype(static::$kernel->getContainer()
-                  ->get('doctrine.orm.entity_manager'));
         
         $content = $response->getContent();
-        $rows = (explode("\n", $content));
+        $rows = str_getcsv($content, "\n");
+        
+        $headerRow = array_pop($rows);
+        $header = str_getcsv($headerRow);
+        $headerSize = sizeof($header);
+        $numberOfRows = 0;
 
-        $em = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
+        foreach ($rows as $row) {
+            $rowContent = str_getcsv($row);
 
-        $cfGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cfGroupId);
-        $reports = $em->getRepository('ChillReportBundle:Report')->findByCFGroup($cfGroup);
+            $this->assertTrue(
+                sizeof($rowContent) == $headerSize,
+                'Each row of the csv contains the good number of elements ('
+                . 'regarding to the first row');
 
-        if($rows[sizeof($rows) -1] == "") {
-             array_pop($rows);
+            $numberOfRows ++;
         }
 
+        $cfGroup = static::$em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cfGroupId);
+        $reports = static::$em->getRepository('ChillReportBundle:Report')->findByCFGroup($cfGroup);
+
         $this->assertTrue(
-            sizeof($rows) == (sizeof($reports) + 1),
+            $numberOfRows == sizeof($reports),
             'The csv file has a number of row equivalent than the number of reports in the db'
         );
     }
