@@ -6,9 +6,10 @@
 #}"{{ 'Report type'|trans }}",{#
 #}{% for customField in cf_group.customFields %}{#
     #}"{{ chill_custom_field_label(customField) }}"{% if not loop.last %},{% endif %}{#
-#}{% endfor %}
+#}{% endfor %}{#
 
-{% for report in reports %}{#
+#}{{ '\r\n'|raw }}{#
+#}{% for report in reports %}{#
     #}{{ report.id }},{#
     #}"{{ report.person|csv_cell }}",{#
     #}"{{ report.person.id|csv_cell }}",{#
@@ -22,6 +23,7 @@
             #}"{{ chill_custom_field_widget(report.cFData , customField, 'csv') }}"{#
         #}{% endif %}{#
         #}{% if not loop.last %},{% endif %}{#
-    #}{% endfor %}
-    
-{% endfor %}
+    #}{% endfor %}{#
+
+    #}{{ '\r\n'|raw }}{#
+#}{% endfor %}
