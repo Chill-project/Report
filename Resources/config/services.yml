@@ -12,3 +12,10 @@ services:
             - [setContainer, ["@service_container"]]
         tags:
             - { name: chill.search, alias: 'report' }
+            
+    chill.report.timeline:
+        class: Chill\ReportBundle\Timeline\TimelineReportProvider
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: chill.timeline, context: 'person' }

@@ -43,7 +43,19 @@ class ChillReportExtension extends Extension implements PrependExtensionInterfac
         $container->prependExtensionConfig('chill_custom_fields',
             array('customizables_entities' => 
                 array(
-                    array('class' => 'Chill\ReportBundle\Entity\Report', 'name' => 'ReportEntity')
+                    array(
+                       'class' => 'Chill\ReportBundle\Entity\Report', 
+                       'name' => 'ReportEntity',
+                       'options' => array(
+                          'summary_fields' => array(
+                             'form_type' => 'custom_fields_group_linked_custom_fields',
+                             'form_options' => 
+                                [
+                                   'multiple' => true,
+                                   'expanded' => false
+                                ]
+                          )
+                       ))
                 )
             )
         );

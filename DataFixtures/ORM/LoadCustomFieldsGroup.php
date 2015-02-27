@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Chill\PersonBundle\DataFixtures\ORM;
+namespace Chill\ReportBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -40,8 +40,13 @@ class LoadCustomFieldsGroup extends AbstractFixture implements OrderedFixtureInt
     {
         echo "loading customFieldsGroup...\n";
         
-        $report = $this->createReport($manager, array('fr' => 'Situation de logement'));
-        $this->addReference('cf_group_report_logement', $report);
+        $report = $this->createReport($manager, 
+              array('fr' => 'Situation de logement'), 
+              ['summary_fields' => ['has_logement', 'house-desc']]);
+        $this->addReference(
+              'cf_group_report_logement', 
+              $report
+              );
         
         $report = $this->createReport($manager, array('fr' => 'Alphabétisme'));
         $this->addReference('cf_group_report_education', $report);
@@ -65,13 +70,17 @@ class LoadCustomFieldsGroup extends AbstractFixture implements OrderedFixtureInt
      * @param array $name
      * @return CustomFieldsGroup
      */
-    private function createReport(ObjectManager $manager, array $name)
+    private function createReport(
+          ObjectManager $manager, 
+          array $name, 
+          array $options = array())
     {
         echo $name['fr']." \n";
         
         $cFGroup = (new CustomFieldsGroup())
             ->setName($name)
-            ->setEntity('Chill\ReportBundle\Entity\Report');
+            ->setEntity('Chill\ReportBundle\Entity\Report')
+            ->setOptions($options);
 
         $manager->persist($cFGroup);
         
