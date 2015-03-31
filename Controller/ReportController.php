@@ -332,7 +332,7 @@ class ReportController extends Controller
         }
 
         if(intval($person_id) !== intval($report->getPerson()->getId())) {
-            throw new Exception(
+            throw new \Exception(
                 $this->get('translator')->trans('This is not the report of the person.'), 1);
         }
 
