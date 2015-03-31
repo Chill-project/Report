@@ -1,9 +1,5 @@
 <?php
 
-use Chill\MainBundle\Entity\User;
-use Chill\PersonBundle\Entity\Person;
-use Chill\CustomFieldsBundle\Entity\CustomFieldsGroup;
-
 /*
  * 
  * Copyright (C) 2014, Champs Libres Cooperative SCRLFS, <http://www.champs-libres.coop>
@@ -23,6 +19,10 @@ use Chill\CustomFieldsBundle\Entity\CustomFieldsGroup;
  */
 
 namespace Chill\ReportBundle\Entity;
+
+use Chill\MainBundle\Entity\User;
+use Chill\PersonBundle\Entity\Person;
+use Chill\CustomFieldsBundle\Entity\CustomFieldsGroup;
 
 /**
  * Report
