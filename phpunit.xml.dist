@@ -1,4 +1,9 @@
-<phpunit bootstrap="./Tests/bootstrap.php" colors="true">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./Tests/bootstrap.php" colors="true"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         backupGlobals="false">
     <testsuites>
         <testsuite name="ChillMain test suite">
             <directory suffix="Test.php">./Tests</directory>
@@ -16,5 +21,6 @@
     </filter>
     <php>
         <server name="KERNEL_DIR" value="./Tests/Fixtures/App/app/" />
+        <ini name="error_reporting" value="-16385"/>
     </php>
 </phpunit>
