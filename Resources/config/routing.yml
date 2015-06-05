@@ -1,5 +1,5 @@
 report_select_type:
-    pattern:  /{_locale}/person/{person_id}/report/select/type/for/creation
+    path:  /{_locale}/person/{person_id}/report/select/type/for/creation
     defaults: { _controller: "ChillReportBundle:Report:selectReportType" }
     options:
         menus:
@@ -42,7 +42,7 @@ report_export_list:
 
 
 report_export_select_type:
-    pattern: /{_locale}/export/report/select/type
+    path: /{_locale}/export/report/select/type
     defaults: {_controller: "ChillReportBundle:Report:selectReportTypeForExport" }
     options:
         menus:
