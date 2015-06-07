@@ -122,8 +122,9 @@ class LoadReports extends AbstractFixture implements OrderedFixtureInterface, Co
     private function fillReport(Report $report)
     {
         //setUser
+        $usernameRef = array_rand(LoadUsers::$refs);
         $report->setUser(
-                $this->getReference(LoadUsers::$refs[array_rand(LoadUsers::$refs)])
+                $this->getReference($usernameRef)
                 );
         
         //set date if null
