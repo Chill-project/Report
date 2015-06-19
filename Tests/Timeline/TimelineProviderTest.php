@@ -62,10 +62,14 @@ class TimelineProviderTest extends WebTestCase
         static::$em = static::$kernel->getContainer()
               ->get('doctrine.orm.entity_manager');
         
+        $center = static::$em->getRepository('ChillMainBundle:Center')
+              ->findOneBy(array('name' => 'Center A'));
+        
         $this->person = (new Person(new \DateTime('2015-05-01')))
           ->setGenre(Person::GENRE_WOMAN)
           ->setFirstName('Nelson')
-          ->setLastName('Mandela');
+          ->setLastName('Mandela')
+          ->setCenter($center);
         static::$em->persist($this->person);
         
         $this->report = (new Report)
