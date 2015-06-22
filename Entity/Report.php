@@ -24,10 +24,14 @@ use Chill\CustomFieldsBundle\Entity\CustomFieldsGroup;
 
 namespace Chill\ReportBundle\Entity;
 
+use Chill\MainBundle\Entity\HasCenterInterface;
+use Chill\MainBundle\Entity\HasScopeInterface;
+use Chill\MainBundle\Entity\Scope;
+
 /**
  * Report
  */
-class Report
+class Report implements HasCenterInterface, HasScopeInterface
 {
     /**
      * @var integer
@@ -50,7 +54,7 @@ class Report
     private $date;
 
     /**
-     * @var string
+     * @var Scope
      */
     private $scope;
 
@@ -154,7 +158,7 @@ class Report
      *
      * @return Report
      */
-    public function setScope($scope)
+    public function setScope(Scope $scope)
     {
         $this->scope = $scope;
 
@@ -164,7 +168,7 @@ class Report
     /**
      * Get scope
      *
-     * @return string
+     * @return Scope
      */
     public function getScope()
     {
@@ -218,4 +222,10 @@ class Report
     {
         return $this->cFGroup;
     }
+
+    public function getCenter()
+    {
+        return $this->person->getCenter();
+    }
+
 }

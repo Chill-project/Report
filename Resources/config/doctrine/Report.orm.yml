@@ -10,10 +10,6 @@ Chill\ReportBundle\Entity\Report:
     fields:
         date:
             type: datetime
-        scope:
-            type: string
-            length: 255
-            nullable: true # TO REMOVE IF SCOPE IS USED
         cFData:
             type: json_array
     manyToOne:
@@ -21,6 +17,8 @@ Chill\ReportBundle\Entity\Report:
             targetEntity: Chill\MainBundle\Entity\User
         person:
             targetEntity: Chill\PersonBundle\Entity\Person
+        scope:
+            targetEntity: Chill\MainBundle\Entity\Scope
         cFGroup:
             targetEntity: Chill\CustomFieldsBundle\Entity\CustomFieldsGroup
     lifecycleCallbacks: {  }
