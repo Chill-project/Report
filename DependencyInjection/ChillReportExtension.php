@@ -76,6 +76,16 @@ class ChillReportExtension extends Extension implements PrependExtensionInterfac
            )
         ));
     }
+    
+    protected function prependRoleHierarchy(ContainerBuilder $container)
+    {
+        $container->prependExtensionConfig('security', array(
+           'role_hierarchy' => array(
+              'CHILL_REPORT_UPDATE' => array('CHILL_REPORT_SEE'),
+              'CHILL_REPORT_CREATE' => array('CHILL_REPORT_SEE')
+           )
+        ));
+    }
 
     /**
      * {@inheritdoc}
@@ -86,5 +96,7 @@ class ChillReportExtension extends Extension implements PrependExtensionInterfac
     {
         $this->declareReportAsCustomizable($container);
         $this->declareRouting($container);
+        $this->prependRoleHierarchy($container);
     }
+    
 }
