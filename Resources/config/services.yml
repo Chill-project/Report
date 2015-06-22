@@ -19,3 +19,10 @@ services:
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: chill.timeline, context: 'person' }
+            
+    chill.report.security.authorization.report_voter:
+        class: Chill\ReportBundle\Security\Authorization\ReportVoter
+        arguments:
+            - "@chill.main.security.authorization.helper"
+        tags:
+            - { name: security.voter }
