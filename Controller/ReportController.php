@@ -241,7 +241,7 @@ class ReportController extends Controller
         $person = $em->getRepository('ChillPersonBundle:Person')
               ->find($person_id);
         
-        if($person === NULL OR $cFGroup === NULL) {
+        if($person === NULL || $cFGroup === NULL) {
             throw $this->createNotFoundException();
         }
 
@@ -319,7 +319,7 @@ class ReportController extends Controller
 
         $entity = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
-        if (!$entity OR !$person) {
+        if (!$entity || !$person) {
             throw $this->createNotFoundException(
                 $this->get('translator')->trans('Unable to find this report.'));
         }
@@ -349,7 +349,7 @@ class ReportController extends Controller
         }
 
         if(intval($person_id) !== intval($report->getPerson()->getId())) {
-            throw new Exception(
+            throw new \RuntimeException(
                 $this->get('translator')->trans('This is not the report of the person.'), 1);
         }
 
@@ -417,8 +417,6 @@ class ReportController extends Controller
             return $this->redirect($this->generateUrl('report_view', 
                 array('person_id' => $report->getPerson()->getId(), 'report_id' => $report_id)));
         }
-
-        $errors = $editForm->getErrorsAsString();
 
         $this->get('session')
             ->getFlashBag()
