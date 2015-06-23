@@ -21,52 +21,49 @@
 
 namespace Chill\ReportBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use Chill\MainBundle\Form\Type\AbstractHasScopeType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
-class ReportType extends AbstractType
-{
+class ReportType extends AbstractHasScopeType
+{    
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $entityManager = $options['em'];
-
         $builder
             ->add('user')
             ->add('date', 'date', 
                 array('required' => true, 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'))
-            ->add('scope', 'scope')
             ->add('cFData', 'custom_field', 
                 array('attr' => array('class' => 'cf-fields'), 
                    'group' => $options['cFGroup']))
         ;
+        
+        $this->appendScopeChoices($builder, $options);
     }
     
     /**
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+        
         $resolver->setDefaults(array(
             'data_class' => 'Chill\ReportBundle\Entity\Report'
         ));
 
         $resolver->setRequired(array(
-            'em',
             'cFGroup',
-            'role',
-            'center'
         ));
 
         $resolver->setAllowedTypes(array(
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
             'cFGroup' => 'Chill\CustomFieldsBundle\Entity\CustomFieldsGroup',
-            'role' => 'Symfony\Component\Security\Core\Role\Role',
-            'center' => 'Chill\MainBundle\Entity\Center'
         ));
     }
 

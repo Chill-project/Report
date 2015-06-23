@@ -26,6 +26,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Chill\PersonBundle\Entity\Person;
 use Chill\ReportBundle\Entity\Report;
 use Chill\ReportBundle\Form\ReportType;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Report controller.
@@ -194,15 +195,25 @@ class ReportController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
+        $cFGroup = $em
+                ->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
+                ->find($cf_group_id);
+        
+        if ($person === NULL) {
+            throw $this->createNotFoundException("Person not found");
+        }
+        
+        if ($cFGroup === NULL){
+            throw $this->createNotFoundException("custom fields group not found");
+        }
 
         $entity = new Report();
         $entity->setUser($this->get('security.context')->getToken()->getUser());
         $entity->setDate(new \DateTime('now'));
 
-        $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cf_group_id);
         $entity->setCFGroup($cFGroup);
 
-        $form = $this->createCreateForm($entity, $person_id, $cFGroup);
+        $form = $this->createCreateForm($entity, $person, $cFGroup);
 
         return $this->render('ChillReportBundle:Report:new.html.twig', array(
             'entity' => $entity,
@@ -280,13 +291,14 @@ class ReportController extends Controller
      */
     private function createCreateForm(Report $entity, Person $person, $cFGroup)
     {
-        $form = $this->createForm(new ReportType(), $entity, array(
+        $form = $this->createForm('chill_reportbundle_report', $entity, array(
             'action' => $this->generateUrl('report_create', 
                 array('person_id' => $person->getId(), 
                           'cf_group_id' => $cFGroup->getId())),
             'method' => 'POST',
-            'em' => $this->getDoctrine()->getManager(),
             'cFGroup' => $cFGroup,
+            'role' => new Role('CHILL_REPORT_CREATE'),
+            'center' => $person->getCenter()
         ));
 
         return $form;

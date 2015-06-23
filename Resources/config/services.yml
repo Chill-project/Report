@@ -26,3 +26,12 @@ services:
             - "@chill.main.security.authorization.helper"
         tags:
             - { name: security.voter }
+            
+    chill.report.form.report_type:
+        class: Chill\ReportBundle\Form\ReportType
+        arguments:
+            - "@chill.main.security.authorization.helper"
+            - "@security.token_storage"
+            - "@chill.main.helper.translatable_string"
+        tags:
+            - { name: form.type, alias: chill_reportbundle_report }
