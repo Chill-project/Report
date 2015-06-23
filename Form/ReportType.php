@@ -24,8 +24,6 @@ namespace Chill\ReportBundle\Form;
 use Chill\MainBundle\Form\Type\AbstractHasScopeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 
 class ReportType extends AbstractHasScopeType
 {    
