@@ -35,3 +35,4 @@ services:
             - "@chill.main.helper.translatable_string"
         tags:
             - { name: form.type, alias: chill_reportbundle_report }
+            
