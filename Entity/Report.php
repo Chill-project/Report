@@ -1,8 +1,5 @@
 <?php
 
-use Chill\MainBundle\Entity\User;
-use Chill\PersonBundle\Entity\Person;
-use Chill\CustomFieldsBundle\Entity\CustomFieldsGroup;
 
 /*
  * 
@@ -27,6 +24,9 @@ namespace Chill\ReportBundle\Entity;
 use Chill\MainBundle\Entity\HasCenterInterface;
 use Chill\MainBundle\Entity\HasScopeInterface;
 use Chill\MainBundle\Entity\Scope;
+use Chill\MainBundle\Entity\User;
+use Chill\PersonBundle\Entity\Person;
+use Chill\CustomFieldsBundle\Entity\CustomFieldsGroup;
 
 /**
  * Report
@@ -39,12 +39,12 @@ class Report implements HasCenterInterface, HasScopeInterface
     private $id;
 
     /**
-     * @var \User
+     * @var User
      */
     private $user;
 
     /**
-     * @var \Person
+     * @var Person
      */
     private $person;
 
@@ -64,7 +64,7 @@ class Report implements HasCenterInterface, HasScopeInterface
     private $cFData;
 
     /**
-     * @var \CustomFieldsGroup
+     * @var CustomFieldsGroup
      */
     private $cFGroup;
 
@@ -80,13 +80,13 @@ class Report implements HasCenterInterface, HasScopeInterface
     }
 
     /**
-     * Set userr
+     * Set user
      *
      * @param \User $user
      *
      * @return Report
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -106,11 +106,11 @@ class Report implements HasCenterInterface, HasScopeInterface
     /**
      * Set person
      *
-     * @param \Person $person
+     * @param Person $person
      *
      * @return Report
      */
-    public function setPerson($person)
+    public function setPerson(Person $person)
     {
         $this->person = $person;
 
@@ -120,7 +120,7 @@ class Report implements HasCenterInterface, HasScopeInterface
     /**
      * Get person
      *
-     * @return \Person
+     * @return Person
      */
     public function getPerson()
     {
@@ -182,7 +182,7 @@ class Report implements HasCenterInterface, HasScopeInterface
      *
      * @return Report
      */
-    public function setCFData($cFData)
+    public function setCFData(array $cFData)
     {
         $this->cFData = $cFData;
 
@@ -202,11 +202,11 @@ class Report implements HasCenterInterface, HasScopeInterface
     /**
      * Set cFGroup
      *
-     * @param \CustomFieldsGroup $cFGroup
+     * @param CustomFieldsGroup $cFGroup
      *
      * @return Report
      */
-    public function setCFGroup($cFGroup)
+    public function setCFGroup(CustomFieldsGroup $cFGroup)
     {
         $this->cFGroup = $cFGroup;
 
@@ -216,7 +216,7 @@ class Report implements HasCenterInterface, HasScopeInterface
     /**
      * Get cFGroup
      *
-     * @return \CustomFieldsGroup
+     * @return CustomFieldsGroup
      */
     public function getCFGroup()
     {
