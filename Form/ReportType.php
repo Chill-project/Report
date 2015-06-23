@@ -39,9 +39,10 @@ class ReportType extends AbstractType
             ->add('user')
             ->add('date', 'date', 
                 array('required' => true, 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'))
-            //->add('scope')
+            ->add('scope', 'scope')
             ->add('cFData', 'custom_field', 
-                array('attr' => array('class' => 'cf-fields'), 'group' => $options['cFGroup']))
+                array('attr' => array('class' => 'cf-fields'), 
+                   'group' => $options['cFGroup']))
         ;
     }
     
@@ -57,11 +58,15 @@ class ReportType extends AbstractType
         $resolver->setRequired(array(
             'em',
             'cFGroup',
+            'role',
+            'center'
         ));
 
         $resolver->setAllowedTypes(array(
             'em' => 'Doctrine\Common\Persistence\ObjectManager',
-            'cFGroup' => 'Chill\CustomFieldsBundle\Entity\CustomFieldsGroup'
+            'cFGroup' => 'Chill\CustomFieldsBundle\Entity\CustomFieldsGroup',
+            'role' => 'Symfony\Component\Security\Core\Role\Role',
+            'center' => 'Chill\MainBundle\Entity\Center'
         ));
     }
 

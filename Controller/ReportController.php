@@ -23,7 +23,7 @@ namespace Chill\ReportBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Chill\PersonBundle\Entity\Person;
 use Chill\ReportBundle\Entity\Report;
 use Chill\ReportBundle\Form\ReportType;
 
@@ -224,16 +224,21 @@ class ReportController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = new Report();
-        $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cf_group_id);
+        $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
+              ->find($cf_group_id);
+        
+        $person = $em->getRepository('ChillPersonBundle:Person')
+              ->find($person_id);
+        
+        if($person === NULL OR $cFGroup === NULL) {
+            throw $this->createNotFoundException();
+        }
 
-        $form = $this->createCreateForm($entity, $person_id, $cFGroup);
+        $form = $this->createCreateForm($entity, $person, $cFGroup);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $cFGroup = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')->find($cf_group_id);
             $entity->setCFGroup($cFGroup);
-
-            $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
             $entity->setPerson($person);
             
             $em->persist($entity);
@@ -250,7 +255,6 @@ class ReportController extends Controller
                 array('person_id' => $person_id,'report_id' => $entity->getId())));
         }
 
-        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
 
         $this->get('session')
             ->getFlashBag()->add('danger',
@@ -274,11 +278,12 @@ class ReportController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Report $entity, $person_id, $cFGroup)
+    private function createCreateForm(Report $entity, Person $person, $cFGroup)
     {
         $form = $this->createForm(new ReportType(), $entity, array(
             'action' => $this->generateUrl('report_create', 
-                array('person_id' => $person_id, 'cf_group_id' => $cFGroup->getId())),
+                array('person_id' => $person->getId(), 
+                          'cf_group_id' => $cFGroup->getId())),
             'method' => 'POST',
             'em' => $this->getDoctrine()->getManager(),
             'cFGroup' => $cFGroup,
@@ -302,7 +307,7 @@ class ReportController extends Controller
 
         $entity = $em->getRepository('ChillReportBundle:Report')->find($report_id);
 
-        if (!$entity) {
+        if (!$entity OR !$person) {
             throw $this->createNotFoundException(
                 $this->get('translator')->trans('Unable to find this report.'));
         }
