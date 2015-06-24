@@ -33,6 +33,7 @@ services:
             - "@chill.main.security.authorization.helper"
             - "@security.token_storage"
             - "@chill.main.helper.translatable_string"
+            - "@doctrine.orm.entity_manager"
         tags:
             - { name: form.type, alias: chill_reportbundle_report }
             

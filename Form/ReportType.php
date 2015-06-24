@@ -21,12 +21,54 @@
 
 namespace Chill\ReportBundle\Form;
 
-use Chill\MainBundle\Form\Type\AbstractHasScopeType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Chill\MainBundle\Form\Type\AppendScopeChoiceTypeTrait;
+use Chill\MainBundle\Security\Authorization\AuthorizationHelper;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Chill\MainBundle\Templating\TranslatableStringHelper;
+use Doctrine\Common\Persistence\ObjectManager;
 
-class ReportType extends AbstractHasScopeType
+class ReportType extends AbstractType
 {    
+    use AppendScopeChoiceTypeTrait;
+    
+    /**
+     *
+     * @var AuthorizationHelper
+     */
+    protected $authorizationHelper;
+    
+    /**
+     *
+     * @var TranslatableStringHelper
+     */
+    protected $translatableStringHelper;
+    
+    /**
+     *
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected $om;
+    
+    /**
+     *
+     * @var \Chill\MainBundle\Entity\User
+     */
+    protected $user;
+    
+    public function __construct(AuthorizationHelper $helper,
+        TokenStorageInterface $tokenStorage, 
+        TranslatableStringHelper $translatableStringHelper,
+        ObjectManager $om)
+    {
+        $this->authorizationHelper = $helper;
+        $this->user = $tokenStorage->getToken()->getUser();
+        $this->translatableStringHelper = $translatableStringHelper;
+        $this->om = $om;
+    }
+    
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -42,16 +84,17 @@ class ReportType extends AbstractHasScopeType
                    'group' => $options['cFGroup']))
         ;
         
-        $this->appendScopeChoices($builder, $options);
+        $this->appendScopeChoices($builder, $options['role'], $options['center'], 
+                $this->user, $this->authorizationHelper, 
+                $this->translatableStringHelper,
+                $this->om);
     }
     
     /**
      * @param OptionsResolverInterface $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        
+    {       
         $resolver->setDefaults(array(
             'data_class' => 'Chill\ReportBundle\Entity\Report'
         ));
@@ -63,6 +106,8 @@ class ReportType extends AbstractHasScopeType
         $resolver->setAllowedTypes(array(
             'cFGroup' => 'Chill\CustomFieldsBundle\Entity\CustomFieldsGroup',
         ));
+        
+        $this->appendScopeChoicesOptions($resolver);
     }
 
     /**

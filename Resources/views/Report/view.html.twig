@@ -30,8 +30,8 @@
     <dl>
         <dt class="inline">{{ 'Person'|trans }}</dt>
         <dd>{{ entity.person }}</dd>
-        <!-- <dt class="inline">{{ 'Scope'|trans }}</dt>
-        <dd>{{ entity.scope }}</dd> -->
+        <dt class="inline">{{ 'Scope'|trans }}</dt>
+        <dd><span class="scope">{{ entity.scope.name|localize_translatable_string }}</span></dd>
         <dt class="inline">{{ 'Date'|trans }}</dt>
         <dd>{{ entity.date|localizeddate('long', 'none') }}</dd>
         <dt class="inline">{{ 'User'|trans }}</dt>
