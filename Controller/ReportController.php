@@ -45,9 +45,15 @@ class ReportController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $reports = $em->getRepository('ChillReportBundle:Report')->findByPerson($person_id);
-
         $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
+        
+        $this->denyAccessUnlessGranted('CHILL_PERSON_SEE', $person);
+        
+        $reachableScopes = $this->get('chill.main.security.authorization.helper')
+                ->getReachableScopes($this->getUser(), new Role('CHILL_REPORT_SEE'),
+                        $person->getCenter());
+        $reports = $em->getRepository('ChillReportBundle:Report')
+                ->findBy(array('person' => $person, 'scope' => $reachableScopes));
 
         return $this->render('ChillReportBundle:Report:list.html.twig', array(
             'reports' => $reports,
@@ -194,7 +200,7 @@ class ReportController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);
+        $person = $em->getRepository('ChillPersonBundle:Person')->find($person_id);        
         $cFGroup = $em
                 ->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
                 ->find($cf_group_id);
@@ -202,6 +208,8 @@ class ReportController extends Controller
         if ($person === NULL) {
             throw $this->createNotFoundException("Person not found");
         }
+        
+        $this->denyAccessUnlessGranted('CHILL_PERSON_SEE', $person);
         
         if ($cFGroup === NULL){
             throw $this->createNotFoundException("custom fields group not found");
@@ -244,6 +252,8 @@ class ReportController extends Controller
         if($person === NULL || $cFGroup === NULL) {
             throw $this->createNotFoundException();
         }
+        
+        $this->denyAccessUnlessGranted('CHILL_PERSON_SEE', $person);
 
         $form = $this->createCreateForm($entity, $person, $cFGroup);
         $form->handleRequest($request);
@@ -251,6 +261,8 @@ class ReportController extends Controller
         if ($form->isValid()) {
             $entity->setCFGroup($cFGroup);
             $entity->setPerson($person);
+            
+            $this->denyAccessUnlessGranted('CHILL_REPORT_CREATE', $entity);
             
             $em->persist($entity);
             $em->flush();
@@ -323,6 +335,8 @@ class ReportController extends Controller
             throw $this->createNotFoundException(
                 $this->get('translator')->trans('Unable to find this report.'));
         }
+        
+        $this->denyAccessUnlessGranted('CHILL_REPORT_SEE', $entity);
 
         return $this->render('ChillReportBundle:Report:view.html.twig', array(
             'entity' => $entity,
@@ -352,10 +366,12 @@ class ReportController extends Controller
             throw new \RuntimeException(
                 $this->get('translator')->trans('This is not the report of the person.'), 1);
         }
+        
+        $this->denyAccessUnlessGranted('CHILL_REPORT_UPDATE', $report);
 
         $person = $report->getPerson();
 
-        $editForm = $this->createEditForm($report, $person->getId());
+        $editForm = $this->createEditForm($report);
 
         return $this->render('ChillReportBundle:Report:edit.html.twig', array(
             'edit_form'   => $editForm->createView(),
@@ -370,14 +386,16 @@ class ReportController extends Controller
      * @param integer $person_id The id of the person.
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createEditForm(Report $entity, $person_id)
+    private function createEditForm(Report $entity)
     {
-        $form = $this->createForm(new ReportType(), $entity, array(
+        $form = $this->createForm('chill_reportbundle_report', $entity, array(
             'action' => $this->generateUrl('report_update', 
-                array('person_id' => $person_id, 'report_id' => $entity->getId())),
+                array('person_id' => $entity->getPerson()->getId(), 
+                    'report_id' => $entity->getId())),
             'method' => 'PUT',
-            'em' => $this->getDoctrine()->getManager(),
             'cFGroup' => $entity->getCFGroup(),
+            'role' => new Role('CHILL_REPORT_UPDATE'),
+            'center' => $entity->getPerson()->getCenter()
         ));
 
         return $form;
@@ -400,8 +418,10 @@ class ReportController extends Controller
             throw $this->createNotFoundException(
                 $this->get('translator')->trans('Unable to find this report.'));
         }
+        
+        $this->denyAccessUnlessGranted('CHILL_REPORT_UPDATE', $report);
 
-        $editForm = $this->createEditForm($report, $person_id);
+        $editForm = $this->createEditForm($report);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
