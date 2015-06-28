@@ -28,6 +28,7 @@ use Chill\ReportBundle\Entity\Report;
 use Chill\MainBundle\DataFixtures\ORM\LoadUsers;
 use Faker\Factory as FakerFactory;
 use Chill\CustomFieldsBundle\Entity\CustomField;
+use Chill\MainBundle\DataFixtures\ORM\LoadScopes;
 
 /**
  * Load reports into DB
@@ -78,7 +79,9 @@ class LoadReports extends AbstractFixture implements OrderedFixtureInterface, Co
                     ->setCFGroup(rand(0,10) > 5 ? 
                             $this->getReference('cf_group_report_logement') :
                             $this->getReference('cf_group_report_education')
-                        );
+                        )
+                    ->setScope($this->getScopeRandom())
+                ;
             $this->fillReport($report);
             $manager->persist($report);
         }
@@ -95,10 +98,21 @@ class LoadReports extends AbstractFixture implements OrderedFixtureInterface, Co
                 ->setPerson($charline)
                 ->setCFGroup($this->getReference('cf_group_report_logement'))
                 ->setDate(new \DateTime('2015-01-05'))
+                ->setScope($this->getReference('scope_social'))
                 ;
         $this->fillReport($report);
         
         $manager->persist($report);
+    }
+    
+    /**
+     * 
+     * @return \Chill\MainBundle\Entity\Scope
+     */
+    private function getScopeRandom()
+    {
+        $ref = LoadScopes::$references[array_rand(LoadScopes::$references)];
+        return $this->getReference($ref);
     }
     
     private function getPeopleRandom($percentage)
