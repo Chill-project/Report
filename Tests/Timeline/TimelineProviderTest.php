@@ -74,7 +74,7 @@ class TimelineProviderTest extends WebTestCase
         
         $this->report = (new Report)
               ->setUser(static::$em->getRepository('ChillMainBundle:User')
-                    ->findOneByUsername('chill b_social'))
+                    ->findOneByUsername('center b_social'))
               ->setDate(new \DateTime('2015-05-02'))
               ->setPerson($this->person)
               ->setCFGroup($this->getHousingCustomFieldsGroup())
