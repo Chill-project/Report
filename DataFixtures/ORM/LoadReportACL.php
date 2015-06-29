@@ -44,19 +44,25 @@ class LoadReportACL extends AbstractFixture implements OrderedFixtureInterface
     {
         foreach (LoadPermissionsGroup::$refs as $permissionsGroupRef) {
             $permissionsGroup = $this->getReference($permissionsGroupRef);
+            printf("processing permission group %s \n", $permissionsGroup->getName());
             foreach (LoadScopes::$references as $scopeRef){
                 $scope = $this->getReference($scopeRef);
+                printf("processing scope %s \n", $scope->getName()['en']);
                 //create permission group
                 switch ($permissionsGroup->getName()) {
                     case 'social':
                         if ($scope->getName()['en'] === 'administrative') {
-                            continue; // we do not want any power on administrative
+                            printf("denying power on administrative \n");
+                            break 2; // we do not want any power on administrative
                         }
+                        break;
                     case 'administrative':
                     case 'direction':
                         if (in_array($scope->getName()['en'], array('administrative', 'social'))) {
-                            continue; // we do not want any power on social or administrative
+                            printf("denying power on %s\n", $scope->getName()['en']);
+                            break 2; // we do not want any power on social or administrative
                         }  
+                        break;
                 }
                 
                 printf("Adding CHILL_REPORT_UPDATE & CHILL_REPORT_CREATE to %s "

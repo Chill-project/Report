@@ -24,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Chill\PersonBundle\Entity\Person;
 use Chill\ReportBundle\Entity\Report;
 use Chill\MainBundle\Tests\TestHelper as MainTestHelper;
+use Chill\MainBundle\Entity\Scope;
 
 /**
  * Test a report is shown into timeline
@@ -65,23 +66,32 @@ class TimelineProviderTest extends WebTestCase
         $center = static::$em->getRepository('ChillMainBundle:Center')
               ->findOneBy(array('name' => 'Center A'));
         
-        $this->person = (new Person(new \DateTime('2015-05-01')))
+        $person = (new Person(new \DateTime('2015-05-01')))
           ->setGenre(Person::GENRE_WOMAN)
           ->setFirstName('Nelson')
           ->setLastName('Mandela')
           ->setCenter($center);
-        static::$em->persist($this->person);
+        static::$em->persist($person);
+        $this->person = $person;
         
-        $this->report = (new Report)
+        $scopesSocial = array_filter(static::$em
+                ->getRepository('ChillMainBundle:Scope')
+                ->findAll(), 
+                function(Scope $scope) { return $scope->getName()['en'] === 'social'; })
+                ;
+        
+        $report = (new Report)
               ->setUser(static::$em->getRepository('ChillMainBundle:User')
-                    ->findOneByUsername('center b_social'))
+                    ->findOneByUsername('center a_social'))
               ->setDate(new \DateTime('2015-05-02'))
               ->setPerson($this->person)
               ->setCFGroup($this->getHousingCustomFieldsGroup())
               ->setCFData(['has_logement' => 'own_house', 
-           'house-desc' => 'blah blah']);
+           'house-desc' => 'blah blah'])
+              ->setScope(end($scopesSocial));
         
-        static::$em->persist($this->report);
+        static::$em->persist($report);
+        $this->report = $report;
         
         
         
@@ -131,6 +141,20 @@ class TimelineProviderTest extends WebTestCase
               'the page contains the mention "Propriétaire"');
     }
     
+    public function testReportIsNotVisibleToUngrantedUsers()
+    {
+        $client = static::createClient(array(),
+            MainTestHelper::getAuthenticatedClientOptions('center a_administrative')
+            );
+        
+        $crawler = $client->request('GET', '/fr/person/'.$this->person->getId()
+              .'/timeline');
+
+         $this->assertEquals(0, $crawler->filter('.report .summary')
+              ->count(), 
+              'the page does not contains a .report .summary element');
+    }
+    
     /**
      * get a random custom fields group
      * 
@@ -155,7 +179,9 @@ class TimelineProviderTest extends WebTestCase
     
     public function tearDown()
     {
-        //static::$em->remove($this->person);
+        //static::$em->refresh($this->person);
+        //static::$em->refresh($this->report);
+       // static::$em->remove($this->person);
         //static::$em->remove($this->report);
     }
 }

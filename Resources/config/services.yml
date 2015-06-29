@@ -17,6 +17,8 @@ services:
         class: Chill\ReportBundle\Timeline\TimelineReportProvider
         arguments:
             - '@doctrine.orm.entity_manager'
+            - '@chill.main.security.authorization.helper'
+            - '@security.token_storage'
         tags:
             - { name: chill.timeline, context: 'person' }
             

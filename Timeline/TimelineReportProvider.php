@@ -22,6 +22,12 @@ namespace Chill\ReportBundle\Timeline;
 
 use Chill\MainBundle\Timeline\TimelineProviderInterface;
 use Doctrine\ORM\EntityManager;
+use Chill\MainBundle\Security\Authorization\AuthorizationHelper;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Role\Role;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Chill\PersonBundle\Entity\Person;
+use Chill\MainBundle\Entity\Scope;
 
 /**
  * Provide report for inclusion in timeline
@@ -38,9 +44,30 @@ class TimelineReportProvider implements TimelineProviderInterface
      */
     protected $em;
     
-    public function __construct(EntityManager $em)
+    /**
+     *
+     * @var AuthorizationHelper
+     */
+    protected $helper;
+    
+    /**
+     *
+     * @var \Chill\MainBundle\Entity\User 
+     */
+    protected $user;
+    
+    public function __construct(EntityManager $em, AuthorizationHelper $helper,
+            TokenStorage $storage)
     {
         $this->em = $em;
+        $this->helper = $helper;
+        
+        if (!$storage->getToken()->getUser() instanceof \Chill\MainBundle\Entity\User)
+        {
+            throw new \RuntimeException('A user should be authenticated !');
+        }
+        
+        $this->user = $storage->getToken()->getUser();
     }
     
     /**
@@ -51,18 +78,70 @@ class TimelineReportProvider implements TimelineProviderInterface
     {
         $this->checkContext($context);
         
-        $metadata = $this->em->getClassMetadata('ChillReportBundle:Report');
+        $metadataReport = $this->em->getClassMetadata('ChillReportBundle:Report');
+        $metadataPerson = $this->em->getClassMetadata('ChillPersonBundle:Person');
         
         return array(
-           'id' => $metadata->getColumnName('id'),
+           'id' => $metadataReport->getTableName()
+                .'.'.$metadataReport->getColumnName('id'),
            'type' => 'report',
-           'date' => $metadata->getColumnName('date'),
-           'FROM' => $metadata->getTableName(),
-           'WHERE' => sprintf('%s = %d',
-                 $metadata
-                    ->getAssociationMapping('person')['joinColumns'][0]['name'],
-                 $args['person']->getId())
+           'date' => $metadataReport->getTableName()
+                .'.'.$metadataReport->getColumnName('date'),
+           'FROM' => $this->getFromClause($metadataReport, $metadataPerson),
+           'WHERE' => $this->getWhereClause($metadataReport, $metadataPerson,
+                   $args['person'])
         );
+    }
+    
+    private function getWhereClause(ClassMetadata $metadataReport, 
+            ClassMetadata $metadataPerson, Person $person)
+    {
+        $role = new Role('CHILL_REPORT_SEE');
+        $reachableCenters = $this->helper->getReachableCenters($this->user, 
+                $role);
+        $associationMapping = $metadataReport->getAssociationMapping('person');
+        
+        // we start with reports having the person_id linked to person 
+        // (currently only context "person" is supported)
+        $whereClause = sprintf('%s = %d',
+                 $associationMapping['joinColumns'][0]['name'],
+                 $person->getId());
+        
+        // we add acl (reachable center and scopes)
+        $centerAndScopeLines = array();
+        foreach ($reachableCenters as $center) {
+            $reachablesScopesId = array_map(
+                    function(Scope $scope) { return $scope->getId(); },
+                    $this->helper->getReachableScopes($this->user, $role, 
+                        $person->getCenter())
+                );
+                    
+            $centerAndScopeLines[] = sprintf('(%s = %d AND %s IN (%s))',
+                    $metadataPerson->getTableName().'.'.
+                        $metadataPerson->getAssociationMapping('center')['joinColumns'][0]['name'],
+                    $center->getId(),
+                    $metadataReport->getTableName().'.'.
+                        $metadataReport->getAssociationMapping('scope')['joinColumns'][0]['name'],
+                    implode(',', $reachablesScopesId));
+            
+        }
+        $whereClause .= ' AND ('.implode(' OR ', $centerAndScopeLines).')';
+        
+        return $whereClause;
+    }
+    
+    private function getFromClause(ClassMetadata $metadataReport,
+            ClassMetadata $metadataPerson)
+    {
+        $associationMapping = $metadataReport->getAssociationMapping('person');
+        
+        return $metadataReport->getTableName().' JOIN '
+            .$metadataPerson->getTableName().' ON '
+            .$metadataPerson->getTableName().'.'.
+                $associationMapping['joinColumns'][0]['referencedColumnName']
+            .' = '
+            .$associationMapping['joinColumns'][0]['name']
+            ;
     }
 
     /**
