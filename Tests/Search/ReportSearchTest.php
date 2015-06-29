@@ -90,17 +90,38 @@ class ReportSearchTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('.error')->count());
     }
     
-    
+    /**
+     * Test that the user do not see unauthorized results
+     * 
+     * We test for that that : 
+     * - we do not see any unauthorized scope mention
+     */
+    public function testUsersDoNotSeeUnauthorizedResults()
+    {
+        $clientSocial = $this->getAuthenticatedClient();
+        $clientAdministrative = $this->getAuthenticatedClient('center a_administrative');
+        
+        $params = array('q' => '@report date:2015-01-05');
+        
+        $crawlerSocial = $clientSocial->request('GET', '/fr/search', $params);
+        $crawlerAdministrative = $clientAdministrative->request('GET', '/fr/search', $params);
+        
+        
+        $this->assertNotContains('social', $crawlerAdministrative->filter('.content')
+                ->text());
+        $this->assertNotContains('administrative', $crawlerAdministrative->filter('.content')
+                ->text());
+    }
     
     
     /**
      * 
      * @return \Symfony\Component\BrowserKit\Client
      */
-    private function getAuthenticatedClient()
+    private function getAuthenticatedClient($username = 'center a_social')
     {
         return static::createClient(array(), array(
-           'PHP_AUTH_USER' => 'center a_social',
+           'PHP_AUTH_USER' => $username,
            'PHP_AUTH_PW'   => 'password',
         ));
     }

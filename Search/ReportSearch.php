@@ -24,6 +24,11 @@ use Chill\MainBundle\Search\AbstractSearch;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Chill\MainBundle\Search\ParsingException;
+use Doctrine\ORM\QueryBuilder;
+use Chill\MainBundle\Security\Authorization\AuthorizationHelper;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Role\Role;
+use Chill\MainBundle\Entity\Scope;
 
 /**
  * Search amongst reports
@@ -39,9 +44,28 @@ class ReportSearch extends AbstractSearch implements ContainerAwareInterface
      */
     private $em;
     
-    public function __construct(EntityManagerInterface $em)
+    /**
+     *
+     * @var AuthorizationHelper
+     */
+    private $helper;
+    
+    /**
+     *
+     * @var \Chill\MainBundle\Entity\User
+     */
+    private $user;
+    
+    public function __construct(EntityManagerInterface $em,
+        AuthorizationHelper $helper, TokenStorageInterface $tokenStorage)
     {
         $this->em = $em;
+        $this->helper = $helper;
+        
+        if(! $tokenStorage->getToken()->getUser() instanceof \Chill\MainBundle\Entity\User) {
+            throw new \RuntimeException('an user must be associated with token');
+        }
+        $this->user = $tokenStorage->getToken()->getUser();
     }
 
     public function getOrder()
@@ -120,7 +144,38 @@ class ReportSearch extends AbstractSearch implements ContainerAwareInterface
                     ;
         }
         
+        $query->andWhere($this->addACL($query));
+        
         return $query;
+    }
+    
+    private function addACL(QueryBuilder $qb)
+    {
+        //adding join
+        $qb->join('r.person', 'p');
+        
+        $role = new Role('CHILL_REPORT_SEE');
+        $reachableCenters = $this->helper->getReachableCenters($this->user, $role);
+        
+        $whereElement = $qb->expr()->orX();
+        $i = 0;
+        foreach ($reachableCenters as $center) {
+            $reachableScopesId = array_map(
+                    function (Scope $scope) { return $scope->getId(); },
+                    $this->helper->getReachableScopes($this->user, $role, $center)
+                    );
+            $whereElement->add(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('p.center', ':center_'.$i),
+                        $qb->expr()->in('r.scope', ':reachable_scopes_'.$i)
+                    )
+                )
+                ;
+            $qb->setParameter('center_'.$i, $center);
+            $qb->setParameter('reachable_scopes_'.$i, $reachableScopesId);
+        }
+        
+        return $whereElement;
     }
 
     public function supports($domain)
