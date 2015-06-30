@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 
  * Copyright (C) 2014, Champs Libres Cooperative SCRLFS, <http://www.champs-libres.coop>
