@@ -57,8 +57,6 @@ class LoadReports extends AbstractFixture implements OrderedFixtureInterface, Co
     
     public function load(ObjectManager $manager)
     {
-        
-        
         $this->createExpected($manager);
         
         //create random 2 times, to allow multiple report on some people
