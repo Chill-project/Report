@@ -148,7 +148,7 @@ class ReportControllerTest extends WebTestCase
             throw new \RuntimeException('the request at person page failed');
         }
         
-        $link = $crawlerPersonPage->selectLink("Ajout d'un rapport")->link();
+        $link = $crawlerPersonPage->selectLink("AJOUT D'UN RAPPORT")->link();
         $this->assertInstanceOf('Symfony\Component\DomCrawler\Link', $link, 
               "There is a \"add a report\" link in menu");
         $this->assertContains(sprintf("/fr/person/%d/report/select/type/for/creation",

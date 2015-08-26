@@ -67,7 +67,7 @@ class TimelineProviderTest extends WebTestCase
               ->findOneBy(array('name' => 'Center A'));
         
         $person = (new Person(new \DateTime('2015-05-01')))
-          ->setGenre(Person::GENRE_WOMAN)
+          ->setGender(Person::FEMALE_GENDER)
           ->setFirstName('Nelson')
           ->setLastName('Mandela')
           ->setCenter($center);
