@@ -25,9 +25,9 @@
         "doctrine/orm": "~2.4",
         "doctrine/common": "~2.4",
         "doctrine/doctrine-bundle": "~1.2",
-        "chill-project/main": "dev-master@dev",
+        "chill-project/main": "dev-add_ui_permission as dev-master",
         "chill-project/custom-fields": "dev-master@dev",
-        "chill-project/person": "dev-master@dev",
+        "chill-project/person": "dev-add_ui_permission as dev-master",
         "champs-libres/composer-bundle-migration": "~1.0",
         "doctrine/doctrine-migrations-bundle": "dev-master@dev",
         "doctrine/migrations": "~1.0@dev"

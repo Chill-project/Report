@@ -97,6 +97,16 @@ class ChillReportExtension extends Extension implements PrependExtensionInterfac
         $this->declareReportAsCustomizable($container);
         $this->declareRouting($container);
         $this->prependRoleHierarchy($container);
+        $this->declareRoles($container);
+    }
+    
+    protected function declareRoles(ContainerBuilder $container)
+    {
+        $container->prependExtensionConfig('chill_main', array(
+           'available_roles' => array(
+              'CHILL_REPORT_UPDATE', 'CHILL_REPORT_SEE', 'CHILL_REPORT_CREATE'
+           )
+        ));
     }
     
 }
