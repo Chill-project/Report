@@ -21,13 +21,14 @@ namespace Chill\ReportBundle\Security\Authorization;
 
 use Chill\MainBundle\Security\Authorization\AbstractChillVoter;
 use Chill\MainBundle\Security\Authorization\AuthorizationHelper;
+use Chill\MainBundle\Security\ProvideRoleInterface;
 
 /**
  * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class ReportVoter extends AbstractChillVoter
+class ReportVoter extends AbstractChillVoter implements ProvideRoleInterface
 {
     const CREATE = 'CHILL_REPORT_CREATE';
     const SEE    = 'CHILL_REPORT_SEE';
@@ -63,4 +64,15 @@ class ReportVoter extends AbstractChillVoter
         
         return $this->helper->userHasAccess($user, $report, $attribute);
     }
+
+    public function getRoles()
+    {
+        return $this->getSupportedAttributes();
+    }
+
+    public function getRolesWithoutScope()
+    {
+        return array();
+    }
+
 }
