@@ -36,3 +36,8 @@ User: Utilisateur
 
 #timeline
 '%user% has filled a %report_label% report on %date%': %user% a ajouté un rapport '%report_label%' le %date%
+
+#roles
+CHILL_REPORT_UPDATE: Modifier les rapports
+CHILL_REPORT_SEE: Voir les rapports
+CHILL_REPORT_CREATE: Créer des rapports
