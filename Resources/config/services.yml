@@ -30,6 +30,7 @@ services:
             - "@chill.main.security.authorization.helper"
         tags:
             - { name: security.voter }
+            - { name: chill.role }
             
     chill.report.form.report_type:
         class: Chill\ReportBundle\Form\ReportType
