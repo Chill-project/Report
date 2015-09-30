@@ -4,7 +4,7 @@
 #}"{{ 'Date'|trans }}",{#
 #}"{{ 'User'|trans }}",{#
 #}"{{ 'Report type'|trans }}",{#
-#}{% for customField in cf_group.customFields %}{#
+#}{% for customField in cf_group.activeCustomFields %}{#
     #}"{{ chill_custom_field_label(customField) }}"{% if not loop.last %},{% endif %}{#
 #}{% endfor %}{#
 
@@ -16,7 +16,7 @@
     #}"{{ report.date|localizeddate('short', 'none') }}",{#
     #}"{{ report.user|csv_cell }}",{#
     #}"{{ report.cFGroup.getName(app.request.locale)|csv_cell }}",{#
-    #}{% for customField in report.cFGroup.customFields %}{#
+    #}{% for customField in report.cFGroup.activeCustomFields %}{#
         #}{% if customField.type == 'title' %}{#
             #}""{#
         #}{% else %}{#
