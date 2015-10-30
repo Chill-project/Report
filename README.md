@@ -1,6 +1,9 @@
 ChillReport
 ===========
 
-The bundle for reports
+The bundle for reports. This is a bundle of the Chill project.
 
-[![Build Status](https://travis-ci.org/Chill-project/Report.png)](http://travis-ci.org/#!/Chill-project/Report.png)
+Documentation & installation
+----------------------------
+
+Read documentation here : http://chill.readthedocs.org
