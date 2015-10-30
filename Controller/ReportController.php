@@ -280,7 +280,7 @@ class ReportController extends Controller
 
 
         $this->get('session')
-            ->getFlashBag()->add('danger',
+            ->getFlashBag()->add('error',
                 $this->get('translator')
                     ->trans('The form is not valid. The report has not been created !')
             );
@@ -440,7 +440,7 @@ class ReportController extends Controller
 
         $this->get('session')
             ->getFlashBag()
-            ->add('danger',
+            ->add('error',
                 $this->get('translator')
                     ->trans('The form is not valid. The report has not been updated !')
             );
