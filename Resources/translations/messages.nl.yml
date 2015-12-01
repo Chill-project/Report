@@ -27,3 +27,6 @@ User: Gebruiker
 'This is not the report of the person.': "Dit is niet het dossier van deze person"
 
 'You are going to leave a page with unsubmitted data. Are you sure you want to leave ?': 'U bent aan te vertrekken een pagina die veranderdt datas behoudt. Bent u er zeker van dat u wil vertrekken ?'
+
+#timeline
+'%user% has filled a %report_label% report on %date%': %user% heeft een rapport '%report_label%' toegevoegd om %date%
