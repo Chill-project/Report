@@ -22,26 +22,23 @@
 
 {% block personcontent %}
 
-
-    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update the report'|trans }}</a>
-
-    <h2>{{ 'Details'|trans }}</h2>
+    <h2 class="chill-red">{{ 'Details'|trans }}</h2>
 
     <dl>
-        <dt class="inline">{{ 'Person'|trans }}</dt>
+        <dt>{{ 'Person'|trans }}&nbsp;:</dt>
         <dd>{{ entity.person }}</dd>
-        <dt class="inline">{{ 'Scope'|trans }}</dt>
+        <dt>{{ 'Scope'|trans }}&nbsp;:</dt>
         <dd><span class="scope">{{ entity.scope.name|localize_translatable_string }}</span></dd>
-        <dt class="inline">{{ 'Date'|trans }}</dt>
+        <dt>{{ 'Date'|trans }}&nbsp;:</dt>
         <dd>{{ entity.date|localizeddate('long', 'none') }}</dd>
-        <dt class="inline">{{ 'User'|trans }}</dt>
+        <dt>{{ 'User'|trans }}&nbsp;:</dt>
         <dd>{{ entity.user }}</dd>
-        <dt class="inline">{{ 'Report type'|trans }}</dt>
+        <dt>{{ 'Report type'|trans }}&nbsp;:</dt>
         <dd>{{ entity.cFGroup.getName(app.request.locale) }}</dd>
 
         {{ chill_custom_fields_group_widget(entity.cFData, entity.cFGroup) }}
     </dl>
 
-    <a href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update the report' | trans }}</a>
+    <a class="sc-button bt-update" href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update the report' | trans }}</a>
 
 {% endblock %}
