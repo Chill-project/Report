@@ -23,6 +23,11 @@
 {% block personcontent %}
     {{ form_start(edit_form) }}
 
+    {{ form_row(edit_form.user) }}
+    {{ form_row(edit_form.date) }}
+    {{ form_row(edit_form.scope) }}
+    {{ form_row(edit_form.cFData) }}
+
     {{ form_widget(edit_form) }}
         <div class="grid-12 centered sticky-form-buttons">
             <button class="sc-button green margin-10" type="submit"><i class="fa fa-save"></i> {{ 'Save report'|trans }}</button>
