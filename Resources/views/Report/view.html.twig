@@ -27,8 +27,8 @@
     <dl>
         <dt>{{ 'Person'|trans }}&nbsp;:</dt>
         <dd>{{ entity.person }}</dd>
-        <dt>{{ 'Scope'|trans }}&nbsp;:</dt>
-        <dd><span class="scope">{{ entity.scope.name|localize_translatable_string }}</span></dd>
+        <dt>{{ 'Circle'|trans }}&nbsp;:</dt>
+        <dd><span class="scope circle">{{ entity.scope.name|localize_translatable_string }}</span></dd>
         <dt>{{ 'Date'|trans }}&nbsp;:</dt>
         <dd>{{ entity.date|localizeddate('long', 'none') }}</dd>
         <dt>{{ 'User'|trans }}&nbsp;:</dt>
@@ -38,7 +38,8 @@
 
         {{ chill_custom_fields_group_widget(entity.cFData, entity.cFGroup) }}
     </dl>
-
+    
+    {% if is_granted('CHILL_REPORT_UPDATE', entity) %}
     <a class="sc-button bt-update" href="{{ path('report_edit', { 'person_id': entity.person.id, 'report_id': entity.id }) }}"><i class="fa fa-pencil"></i> {{ 'Update the report' | trans }}</a>
-
+    {% endif %}
 {% endblock %}

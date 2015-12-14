@@ -70,6 +70,21 @@ class ReportController extends Controller
      */
     public function selectReportTypeAction($person_id, Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+        
+        $person = $em->getRepository('ChillPersonBundle:Person')
+                ->find($person_id);
+        
+        if ($person === NULL) {
+            throw $this->createNotFoundException('Person not found!');
+        }
+        
+        $this->denyAccessUnlessGranted('CHILL_PERSON_SEE', $person, 'access denied for person view');
+        // check access on report creation for a dummy report
+        $this->denyAccessUnlessGranted('CHILL_REPORT_CREATE', 
+                (new Report())->setPerson($person), 'access denied for report creation');
+        
+        
         $cFGroupId = $request->query->get('cFGroup');
 
         if($cFGroupId) {
@@ -77,8 +92,6 @@ class ReportController extends Controller
                 $this->generateUrl('report_new',
                     array('person_id' => $person_id, 'cf_group_id' => $cFGroupId)));
         }
-
-        $em = $this->getDoctrine()->getManager();
 
         $cFGroups = $em->getRepository('ChillCustomFieldsBundle:CustomFieldsGroup')
             ->findByEntity('Chill\ReportBundle\Entity\Report');
@@ -210,6 +223,9 @@ class ReportController extends Controller
         }
         
         $this->denyAccessUnlessGranted('CHILL_PERSON_SEE', $person);
+        // check access on report creation for a dummy report
+        $this->denyAccessUnlessGranted('CHILL_REPORT_CREATE', 
+                (new Report())->setPerson($person), 'access denied for report creation');
         
         if ($cFGroup === NULL){
             throw $this->createNotFoundException("custom fields group not found");

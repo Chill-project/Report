@@ -23,7 +23,9 @@
 {% block personcontent %}
     {{ form_start(form) }}
 
-    {{ form_widget(form) }}
+    {{ form_row(form.user) }}
+    {{ form_row(form.date) }}
+    {{ form_row(form.scope) }}
         <div class="grid-12 centered sticky-form-buttons">
             <button class="sc-button green margin-10" type="submit"><i class="fa fa-save"></i> {{ 'Add report'|trans }}</button>
         </div>
