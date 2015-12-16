@@ -383,7 +383,7 @@ class ReportControllerTest extends WebTestCase
         $this->assertRegExp(sprintf('|/fr/person/%s/report/[0-9]*/view$|', 
               static::$person->getId(), $reportId), $linkSee[0]->getUri());
         
-        $linkUpdate = $crawler->selectLink('Mettre à jour le rapport')->links();
+        $linkUpdate = $crawler->selectLink('Update')->links();
         $this->assertGreaterThan(0, count($linkUpdate));
         $this->assertRegExp(sprintf('|/fr/person/%s/report/[0-9]*/edit$|',
               static::$person->getId(), $reportId), $linkUpdate[0]->getUri());
